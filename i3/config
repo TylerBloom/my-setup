@@ -124,14 +124,12 @@ set $ws4 "4:IV"
 set $ws5 "5:V"
 set $ws6 "6:VI"
 set $ws7 "7:VII"
-set $ws8 "8:Spotify"
-set $ws9 "9:Connect"
-set $ws0 "10:Web"
+set $ws8 "8:VIII"
+set $ws9 "9:IX"
+set $ws0 "10:X"
 
 # Autostart applications
-exec --no-startup-id i3-msg 'workspace 8:Spotify; exec /usr/bin/spotify'
-exec --no-startup-id i3-msg 'workspace 9:Connect; exec /usr/bin/discord'
-exec --no-startup-id i3-msg 'workspace 10:Web; exec /usr/bin/google-chrome'
+# TODO
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
