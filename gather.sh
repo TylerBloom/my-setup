@@ -4,6 +4,8 @@
 # files back here.  This allows you to make config changes elsewhere, and have
 # them copied here.
 
+cp ${HOME}/.bashrc ./
+
 for i in $(ls)
 do
   if [[ -d $i ]]
