@@ -4,7 +4,7 @@ echo "Setting up FontConfig: "
 
 ./get_deps.sh
 
-if [[ ! -f ${HOME}/.config/fontconfig ]]
+if [[ ! -e ${HOME}/.config/fontconfig ]]
 then
   mkdir ${HOME}/.config/fontconfig
 fi

@@ -4,7 +4,7 @@ echo "Setting up NeoViM: "
 
 ./get_deps.sh
 
-if [[ ! -f ${HOME}/.config/nvim ]]
+if [[ ! -e ${HOME}/.config/nvim ]]
 then
   mkdir ${HOME}/.config/nvim
 fi

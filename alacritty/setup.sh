@@ -4,7 +4,7 @@ echo "Setting up Alacritty: "
 
 ./get_deps.sh
 
-if [[ ! -f ${HOME}/.config/alacritty ]]
+if [[ ! -e ${HOME}/.config/alacritty ]]
 then
   mkdir ${HOME}/.config/alacritty
 fi

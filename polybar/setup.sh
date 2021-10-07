@@ -4,7 +4,7 @@ echo "Setting up Polybar: "
 
 ./get_deps.sh
 
-if [[ ! -f ${HOME}/.config/polybar ]]
+if [[ ! -e ${HOME}/.config/polybar ]]
 then
   mkdir ${HOME}/.config/polybar
 fi
