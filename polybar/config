@@ -148,7 +148,7 @@ interval = 5
 date = "%a %d"
 date-alt = %a %b %d
 
-time = %H:%M
+time = %I:%M
 time-alt = %I:%M%p
 
 format-prefix =
@@ -255,8 +255,8 @@ label-separator-foreground = #ffb52a
 
 [module/wireless-network]
 type = internal/network
-;interface = enp4s0
-interface = wlan0
+interface = wlp4s0
+;interface = wlan0
 interval = 1.0
 ping-interval = 10
 
@@ -318,5 +318,5 @@ format = Playing: <label>
 exec = python3   /home/tyler/.config/polybar/spotify.py  -f '{play_pause} {song} - {artist} - {album}'
 
 
-; vim:ft=dosini
+;vim:ft=dosini
 

@@ -468,7 +468,7 @@ if has("autocmd")
     \| exe "normal! g`\"" | endif
 endif
 
-call plug#begin("~/.config/nvim/plugged")
+call plug#begin("~/.vim/plugged")
 
 " pre config scripts
 Plug '~/.vim/rc/pre'
