@@ -174,6 +174,9 @@ map <leader>bd :Bclose<cr>:tabclose<cr>gT
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
 
+
+" <leader><leader> toggles between buffers
+nnoremap <leader><leader> <c-^>
 map <leader>l :bnext<cr>
 map <leader>h :bprevious<cr>
 
@@ -496,11 +499,9 @@ Plug 'justinmk/vim-sneak'
 
 " Themes
 Plug 'chriskempson/base16-vim'
-Plug 'octol/vim-cpp-enhanced-highlight'
 
 " GUI enhancements
 "Plug 'itchyny/lightline.vim'
-Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -540,8 +541,15 @@ Plug 'rhysd/vim-grammarous'
 
 " General Langauge Support
 Plug 'w0rp/ale'
-Plug 'ncm2/ncm2'
+"Plug 'ncm2/ncm2'
+"Plug 'roxma/nvim-yarp'
+"Plug 'ncm2/ncm2-bufword'
+"Plug 'ncm2/ncm2-path'
 Plug 'sheerun/vim-polyglot'
+"Plug 'Shougo/echodoc.vim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'nvim-lua/completion-nvim'
 "Plug 'vim-syntastic/syntastic'
 "Plug 'neoclide/coc.nvim', {'branch':'release'}
 
@@ -555,6 +563,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'dag/vim-fish'
 Plug 'godlygeek/tabular'
+Plug 'rust-lang/rls'
 
 " post config scripts
 Plug '~/.vim/rc/post'
@@ -581,8 +590,13 @@ else
   set signcolumn=yes
 endif
 
+" Completion
+set completeopt=menuone,noselect
 inoremap <expr><TAB>   pumvisible() ? "\<C-n>" : "\<TAB>" 
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" Enable type inlay hints
+autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ only_current_line = true }
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -592,7 +606,6 @@ endfunction
 
 " !!!-------------------- UltiSnips Config --------------------!!!
 let g:UltiSnipsExpandTrigger="<c-tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 " If you want :UltiSnipsEdit to split your window.
@@ -659,7 +672,8 @@ let g:tagbar_ctags_bin="~/.config/nvim/tags/ctags-5.8/ctags"
 let g:ale_linters = {
 \   'javascript': ['eslint'],
 \   'python': ['flake8'],
-\   'go': ['go', 'golint', 'errcheck']
+\   'go': ['go', 'golint', 'errcheck'],
+\   'rust': ['cargo', 'rls' ]
 \}
 
 nmap <silent> <leader>a <Plug>(ale_next_wrap)
@@ -687,11 +701,68 @@ let g:latex_fold_sections = []
 let g:localvimrc_ask = 0
 
 " rust
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_save = 0
+let g:ale_lint_on_enter = 0
+let g:ale_rust_cargo_use_check = 1
+let g:ale_rust_cargo_check_all_targets = 1
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit_files = 1
 let g:rustfmt_fail_silently = 0
 let g:rust_clip_command = 'xclip -selection clipboard'
 
+" language server protocol
+
+" LSP configuration
+lua << END
+local lspconfig = require('lspconfig')
+require'lspconfig'.rust_analyzer.setup{}
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+ 
+  --Enable completion triggered by <c-x><c-o>
+ 
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
+ 
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+ 
+  -- Forward to other plugins
+ end
+ 
+ local servers = { "rust_analyzer" }
+ for _, lsp in ipairs(servers) do
+  lspconfig[lsp].setup {
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    }
+  }
+end
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    virtual_text = true,
+    signs = true,
+    update_in_insert = true,
+  }
+)
+END
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => FZF Config

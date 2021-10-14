@@ -132,7 +132,7 @@ if ! shopt -oq posix; then
 fi
 
 PATH="${PATH}:~/.waypoints"
-alias adg='. adg'
+alias adg='. bash adg'
 
 export XDG_CURRENT_DESKTOP=GNOME
 
