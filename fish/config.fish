@@ -1,6 +1,7 @@
 abbr -a yr 'cal -y'
 abbr -a c cargo
 abbr -a e nvim
+abbr -a vim nvim
 abbr -a m make
 abbr -a o xdg-open
 abbr -a g git
@@ -21,9 +22,6 @@ if status --is-interactive
 	if test -d ~/dev/others/base16/templates/fish-shell
 		set fish_function_path $fish_function_path ~/dev/others/base16/templates/fish-shell/functions
 		builtin source ~/dev/others/base16/templates/fish-shell/conf.d/base16.fish
-	end
-	if ! set -q TMUX
-		exec tmux
 	end
 end
 
