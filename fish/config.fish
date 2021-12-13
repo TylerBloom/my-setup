@@ -4,6 +4,7 @@ abbr -a e nvim
 abbr -a vim nvim
 abbr -a m make
 abbr -a o xdg-open
+abbr -a adg ". ~/.local/bin/adg.fish"
 abbr -a g git
 abbr -a gc 'git checkout'
 abbr -a ga 'git add -p'
