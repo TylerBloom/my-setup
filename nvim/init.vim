@@ -8,7 +8,7 @@
 
 set shell=/bin/bash
 " Sets how many lines of history VIM has to remember
-set history=500
+set history=100
 
 " Enable filetype plugins
 filetype plugin indent on
@@ -24,16 +24,11 @@ let mapleader = " "
 " Fast saving
 nmap <leader>w :w!<cr>
 
-" :W sudo saves the file 
-" (useful for handling the permission-denied error)
-command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
-
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Set 7 lines to the cursor - when moving vertically using j/k
-set so=4
+" Set 3 lines to the cursor - when moving vertically using j/k
+set so=3
 
 " Avoid garbled characters in Chinese language windows OS
 let $LANG='en' 
@@ -93,12 +88,6 @@ set noerrorbells
 set novisualbell
 set t_vb=
 set tm=500
-
-" Properly disable sound on errors on MacVim
-if has("gui_macvim")
-    autocmd GUIEnter * set vb t_vb=
-endif
-
 
 " Add a bit extra margin to the left
 set foldcolumn=1
@@ -161,18 +150,18 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Ctrl+h to stop searching
-vnoremap <C-h> :nohlsearch<cr>
-nnoremap <C-h> :nohlsearch<cr>
+vnoremap <leader>/ :nohlsearch<cr>
+nnoremap <leader>/ :nohlsearch<cr>
 
 " Move by line
 nnoremap j gj
 nnoremap k gk
 
 " Close the current buffer
-map <leader>bd :Bclose<cr>:tabclose<cr>gT
+map <leader>b :Bclose<cr>:tabclose<cr>gT
 
 " Close all the buffers
-map <leader>ba :bufdo bd<cr>
+map <leader>B :bufdo bd<cr>
 
 
 " <leader><leader> toggles between buffers
@@ -197,12 +186,6 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " Remap VIM 0 to first non-blank character
 map 0 ^
 
-" Move a line of text using ALT+[jk] or Command+[jk] on mac
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-
 if has("mac") || has("macunix")
   nmap <D-j> <M-j>
   nmap <D-k> <M-k>
@@ -226,7 +209,7 @@ endif
 " Quick paste from clipboard
 noremap <leader>p "+p
 noremap <leader>P "+P
-noremap <leader>yy "+yy
+noremap <leader>y "+yy
 vmap <leader>y "+y
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -236,10 +219,10 @@ vmap <leader>y "+y
 map <leader>ss :setlocal spell!<cr>
 
 " Shortcuts using <leader>
-map <leader>sn ]s
-map <leader>sp [s
-map <leader>sa zg
-map <leader>s? z=
+" map <leader>sn ]s
+" map <leader>sp [s
+" map <leader>sa zg
+" map <leader>s? z=
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -248,23 +231,14 @@ map <leader>s? z=
 " Remove the Windows ^M - when the encodings gets messed up
 noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
-" Quickly open a buffer for scribble
-map <leader>q :e ~/buffer<cr>
-
-" Quickly open a markdown buffer for scribble
-map <leader>x :e ~/buffer.md<cr>
-
 " Toggle paste mode on and off
 map <leader>pp :setlocal paste!<cr>
 
 " <leader>, shows/hides hidden characters
 nnoremap <leader>, :set invlist<cr>
 
-" <leader>q shows stats
-nnoremap <leader>q g<c-g>
-
 " Keymap for replacing up to next _ or -
-noremap <leader>m ct_
+map <leader>m t_
 
 " I can type :help on my own, thanks.
 map <F1> <Esc>
@@ -393,7 +367,6 @@ au FileType python map <buffer> <leader>D ?def
 """ The below is from other sources
 set number
 set relativenumber
-set hlsearch
 
 set title
 
@@ -416,19 +389,9 @@ set autoindent
 set copyindent
 set shiftround
 set cpoptions+=I
-" set smartindent
-" set smarttab
-" set expandtab
-" set softtabstop=0
-" set shiftwidth=2
-
-set ignorecase
-set smartcase
 
 " Folding functions
 set foldmethod=manual
-
-set wrap
 
 " Visual Mode mappings
 " Normally, pasting something while in visual mode will replace what is in
@@ -452,11 +415,6 @@ nnoremap k gk
 " Allow ; to be used to start a command
 nnoremap ; :
 
-" Ctrl+h to stop searching
-vnoremap <C-/> :nohlsearch<cr>
-nnoremap <C-/> :nohlsearch<cr>
-
-filetype plugin on
 syntax on
 
 " Death to the arrow keys...
@@ -476,12 +434,6 @@ augroup AutoSaveFolds
   au BufWinLeave .* mkview
   au BufWinEnter .* silent loadview
 augroup END
-
-" Start where you left off
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-    \| exe "normal! g`\"" | endif
-endif
 
 call plug#begin("~/.vim/plugged")
 
@@ -513,9 +465,6 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Fuzzy finder
-Plug 'airblade/vim-rooter'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
 
 " quickly wrap text in quotes, parenthesis, etc.
 Plug 'tpope/vim-surround'
@@ -544,24 +493,22 @@ Plug 'SirVer/ultisnips', {'branch':'master'}
 Plug 'quangnguyen30192/cmp-nvim-ultisnips', {'branch':'main'}
 
 " General Langauge Support
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/cmp-nvim-lsp', {'branch':'main'}
+Plug 'hrsh7th/cmp-buffer', {'branch':'main'}
+Plug 'hrsh7th/nvim-cmp', {'branch':'main'}
 Plug 'w0rp/ale'
 "Plug 'ncm2/ncm2'
 "Plug 'roxma/nvim-yarp'
 "Plug 'ncm2/ncm2-bufword'
 "Plug 'ncm2/ncm2-path'
-Plug 'sheerun/vim-polyglot'
+"Plug 'sheerun/vim-polyglot'
 "Plug 'Shougo/echodoc.vim'
-Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'nvim-lua/completion-nvim'
 "Plug 'vim-syntastic/syntastic'
 "Plug 'neoclide/coc.nvim', {'branch':'release'}
 "Plug 'glepnir/lspsaga.nvim'
-
-Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/cmp-nvim-lsp', {'branch':'main'}
-Plug 'hrsh7th/cmp-buffer', {'branch':'main'}
-Plug 'hrsh7th/nvim-cmp', {'branch':'main'}
 
 " Specific Langauge Support
 Plug 'plasticboy/vim-markdown'
@@ -569,11 +516,11 @@ Plug 'hdima/python-syntax'
 Plug 'lervag/vimtex'
 Plug 'cespare/vim-toml', {'branch':'main'}
 Plug 'stephpy/vim-yaml'
+Plug 'rust-lang/rls'
 Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'dag/vim-fish'
 Plug 'godlygeek/tabular'
-Plug 'rust-lang/rls'
 
 " post config scripts
 Plug '~/.vim/rc/post'
@@ -594,17 +541,8 @@ let g:completion_enable_auto_popup=1
 let g:completion_timer_cycle = 1 "default value is 80
 let g:completion_trigger_keyword_length = 2 " default = 1
 
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("nvim-0.5.0") || has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
-
 " Completion
-set completeopt=menu,menuone,noselect
+set completeopt=menu,menuone
 inoremap <expr><TAB>   pumvisible() ? "\<C-n>" : "\<Tab>" 
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
@@ -637,8 +575,6 @@ autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTr
     \ quit | endif
 
 " !!!------------------ NERD Commenter Config -------------------!!!
-filetype plugin off
-
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
 
@@ -670,61 +606,23 @@ hi Comment ctermfg=30 guifg=#64CBC8
 " Brighter comments
 call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
 
-" !!!------------------ Vim Airline-Themes Config -------------------!!!
-" let g:airline_solarized_bg='dark'
-" let g:airline_theme='base16'
-
 " !!!------------------ Tagbar Config ----------------------------!!!
 nmap <F8> :TagbarToggle<CR>
 let g:tagbar_ctags_bin="~/.config/nvim/tags/ctags-5.8/ctags"
 
+" !!!------------------ Ale Config ----------------------------!!!
+nnoremap <leader>G :ALEGoToDefinition<CR>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Ale (syntax checker and linter)
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ale_linters = {
-\   'javascript': ['eslint'],
-\   'python': ['flake8'],
-\   'go': ['go', 'golint', 'errcheck'],
-\   'rust': ['cargo', 'rls' ]
+\  'rust': ['analyzer'],
 \}
 
-nmap <silent> <leader>a <Plug>(ale_next_wrap)
+let g:ale_fixers = { 'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lines'] }
 
-" Only run linting when saving the file
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 0
+nmap <silent> <leader>e <Plug>(ale_next_wrap)
+nmap <silent> <Leader>f <Plug>(ale_lint)
 
-" Disabling highlighting
-let g:ale_set_highlights = 0
-let g:ale_python_flake8_options = '--ignore=E201,E202,E221,E222,E301,E303,E714,W391 --max-line-length=146'
-
-" Javascript
-let javaScript_fold=0
-
-" Java
-let java_ignore_javadoc=1
-
-" Latex
-let g:latex_indent_enabled = 1
-let g:latex_fold_envs = 0
-let g:latex_fold_sections = []
-
-" Don't confirm .lvimrc
-let g:localvimrc_ask = 0
-
-" rust
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_save = 0
-let g:ale_lint_on_enter = 0
-let g:ale_rust_cargo_use_check = 1
-let g:ale_rust_cargo_check_all_targets = 1
-let g:rustfmt_autosave = 1
-let g:rustfmt_emit_files = 1
-let g:rustfmt_fail_silently = 0
-let g:rust_clip_command = 'xclip -selection clipboard'
-
-" language server protocol
+" !!!------------------ LSP Config ----------------------------!!!
 lua <<EOF
 local lspconfig = require('lspconfig')
 local on_attach = function(client, bufnr)
@@ -801,29 +699,6 @@ autocmd FileType lua lua require'cmp'.setup.buffer {
 \     { name = 'buffer' },
 \   },
 \ }
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => FZF Config
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" <leader>s for Rg search
-noremap <leader>s :Rg
-let g:fzf_layout = { 'down': '~20%' }
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \   <bang>0)
-
-function! s:list_cmd()
-  let base = fnamemodify(expand('%'), ':h:.:S')
-  return base == '.' ? 'fd --type file --follow' : printf('fd --type file --follow | proximity-sort %s', shellescape(expand('%')))
-endfunction
-
-command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, {'source': s:list_cmd(),
-  \                               'options': '--tiebreak=index'}, <bang>0)
-
 
 " =============================================================================
 " # Footer
