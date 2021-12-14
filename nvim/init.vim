@@ -617,6 +617,24 @@ let g:ale_linters = {
 \  'rust': ['analyzer'],
 \}
 
+" Correct
+" highlight ALEWarning cterm=underline ctermbg=DarkMagenta
+
+highlight clear ALEWarning
+highlight clear ALEError
+highlight clear ALEErrorSign
+
+highlight ALEWarning cterm=underline
+highlight ALEError cterm=underline
+
+"function! g:Base16hi(group, guifg, guibg, ctermfg, ctermbg, ...)
+call Base16hi("ALEWarning", "", "", "", g:base16_cterm02, "" )
+call Base16hi("ALEError", "", "", "", g:base16_cterm02, "" )
+call Base16hi("ALEErrorSign", "", "", g:base16_cterm08, g:base16_cterm01, "" )
+
+let g:ale_sign_error = '**'
+let g:ale_sign_warning = '++'
+
 let g:ale_fixers = { 'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lines'] }
 
 nmap <silent> <leader>e <Plug>(ale_next_wrap)
