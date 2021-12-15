@@ -555,6 +555,13 @@ function! s:check_back_space() abort
 endfunction
 
 
+" !!!-------------------- Autoformat Config --------------------!!!
+let g:formatdef_rustfmt = '"rustfmt"'
+let g:formatters_rust = ['rustfmt']
+
+noremap <leader>f :Autoformat<CR>
+noremap <leader>t :RustTest<CR>
+
 " !!!-------------------- UltiSnips Config --------------------!!!
 let g:UltiSnipsExpandTrigger="<c-tab>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
@@ -638,7 +645,6 @@ let g:ale_sign_warning = '++'
 let g:ale_fixers = { 'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lines'] }
 
 nmap <silent> <leader>e <Plug>(ale_next_wrap)
-nmap <silent> <Leader>f <Plug>(ale_lint)
 
 " !!!------------------ LSP Config ----------------------------!!!
 lua <<EOF
