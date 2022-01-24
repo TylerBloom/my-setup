@@ -1,6 +1,19 @@
-" While a large portion of this RC is my own and pieced together from a
-" collection of sources, a sizable portion was pulled from the source below
-"           https://github.com/amix/vimrc
+
+" About
+"  (Neo)Vim users will debate endlessly about the 'best' setup.  I find this
+"  dumb.  Ultimately, the best setup is one that works for you, and this works
+"  for me.  If you can find some use in it, fantastic.
+"
+"  The TL;DR on my setup philosophy is that want new features to work behind
+"  the scenes or prompt me.  If I have to remember a new set of commands or
+"  keystrokes, the likelihood that I will use that feature are deduced
+"  greatly.
+"  
+"  Most shortcuts that I add use the '<leader>'.  Things that I use with great
+"  frequence are shortcut this way (formatting, running specific tests,
+"  switching between open files, etc).
+"
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
@@ -427,6 +440,35 @@ noremap   <Down>   <NOP>
 noremap   <Left>   <NOP>
 noremap   <Right>  <NOP>
 
+" Jump to start and end of line using the home row keys
+map H ^
+map L $
+
+" Ctrl+j and Ctrl+k as Esc
+" Ctrl-j is a little awkward unfortunately:
+" https://github.com/neovim/neovim/issues/5916
+" So we also map Ctrl+k
+nnoremap <C-j> <Esc>
+inoremap <C-j> <Esc>
+vnoremap <C-j> <Esc>
+snoremap <C-j> <Esc>
+xnoremap <C-j> <Esc>
+cnoremap <C-j> <C-c>
+onoremap <C-j> <Esc>
+lnoremap <C-j> <Esc>
+tnoremap <C-j> <Esc>
+
+nnoremap <C-k> <Esc>
+inoremap <C-k> <Esc>
+vnoremap <C-k> <Esc>
+snoremap <C-k> <Esc>
+xnoremap <C-k> <Esc>
+cnoremap <C-k> <C-c>
+onoremap <C-k> <Esc>
+lnoremap <C-k> <Esc>
+tnoremap <C-k> <Esc>
+
+
 " Startup actions
 " Saves and existing folds and loads old folds when a file is opened
 augroup AutoSaveFolds
@@ -494,11 +536,12 @@ Plug 'quangnguyen30192/cmp-nvim-ultisnips', {'branch':'main'}
 
 " General Langauge Support
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'nvim-lua/lsp_extensions.nvim' " Minor Rust analyzer support (inlayed hints)
 Plug 'nvim-lua/completion-nvim'
 Plug 'hrsh7th/cmp-nvim-lsp', {'branch':'main'}
 Plug 'hrsh7th/cmp-buffer', {'branch':'main'}
 Plug 'hrsh7th/nvim-cmp', {'branch':'main'}
+Plug 'ray-x/lsp_signature.nvim'
 Plug 'w0rp/ale'
 "Plug 'ncm2/ncm2'
 "Plug 'roxma/nvim-yarp'
@@ -547,7 +590,8 @@ inoremap <expr><TAB>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Enable type inlay hints
-autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ only_current_line = true }
+autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = "  >> ", aligned = true }
+noremap <leader>E :lua vim.lsp.diagnostic.show_line_diagnostics{focus=false}<CR>
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -647,7 +691,9 @@ let g:ale_fixers = { 'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lin
 nmap <silent> <leader>e <Plug>(ale_next_wrap)
 
 " !!!------------------ LSP Config ----------------------------!!!
-lua <<EOF
+
+" LSP configuration
+lua << END
 local lspconfig = require('lspconfig')
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
@@ -715,7 +761,7 @@ end
       { name = 'buffer' },
     })
   })
-EOF
+END
 
 autocmd FileType lua lua require'cmp'.setup.buffer {
 \   sources = {
