@@ -543,6 +543,7 @@ Plug 'hrsh7th/cmp-buffer', {'branch':'main'}
 Plug 'hrsh7th/nvim-cmp', {'branch':'main'}
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'w0rp/ale'
+Plug 'j-hui/fidget.nvim'
 "Plug 'ncm2/ncm2'
 "Plug 'roxma/nvim-yarp'
 "Plug 'ncm2/ncm2-bufword'
@@ -654,6 +655,7 @@ set background=dark
 let base16colorspace=256
 colorscheme base16-gruvbox-dark-hard
 hi Comment ctermfg=30 guifg=#64CBC8
+hi Normal guibg=NONE ctermbg=NONE
 " Brighter comments
 call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
 
@@ -761,6 +763,42 @@ end
       { name = 'buffer' },
     })
   })
+
+require"fidget".setup{
+{
+  text = {
+    spinner = "pipe",         -- animation shown when tasks are ongoing
+    done = "✔",               -- character shown when all tasks are complete
+    commenced = "Started",    -- message shown when task starts
+    completed = "Completed",  -- message shown when task completes
+  },
+  align = {
+    bottom = false,
+    right = true,
+  },
+  timer = {
+    spinner_rate = 125,       -- frame rate of spinner animation, in ms
+    fidget_decay = 2000,      -- how long to keep around empty fidget, in ms
+    task_decay = 1000,        -- how long to keep around completed task, in ms
+  },
+  fmt = {
+    leftpad = true,           -- right-justify text in fidget box
+    fidget =                  -- function to format fidget title
+      function(fidget_name, spinner)
+        return string.format("%s %s", spinner, fidget_name)
+      end,
+    task =                    -- function to format each task line
+      function(task_name, message, percentage)
+        return string.format(
+          "%s%s [%s]",
+          message,
+          percentage and string.format(" (%s%%)", percentage) or "",
+          task_name
+        )
+      end,
+  },
+}
+}
 END
 
 autocmd FileType lua lua require'cmp'.setup.buffer {

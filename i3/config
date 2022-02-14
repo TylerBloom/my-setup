@@ -30,6 +30,7 @@ font pango:monospace 8
 floating_modifier $mod
 
 # loads the settings daemon
+exec --no-startup-id "compton --config $HOME/.config/compton/compton.conf"
 exec --no-startup-id "unity-settings-daemon"
 exec --no-startup-id feh --bg-fill /usr/share/backgrounds/pop/kate-hazen-fractal-mountains.png
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh &
