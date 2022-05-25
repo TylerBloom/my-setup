@@ -2,8 +2,6 @@
 
 echo "Setting up Fish: "
 
-./get_deps.sh
-
 if [[ ! -e ${HOME}/.config/fish ]]
 then
   mkdir ${HOME}/.config/fish

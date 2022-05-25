@@ -26,6 +26,11 @@ set history=100
 " Enable filetype plugins
 filetype plugin indent on
 
+set number
+set relativenumber
+
+set title
+
 " Set to auto read when a file is changed from the outside
 set autoread
 au FocusGained,BufEnter * checktime
@@ -175,7 +180,6 @@ map <leader>b :Bclose<cr>:tabclose<cr>gT
 
 " Close all the buffers
 map <leader>B :bufdo bd<cr>
-
 
 " <leader><leader> toggles between buffers
 nnoremap <leader><leader> <c-^>
@@ -378,10 +382,6 @@ au FileType python map <buffer> <leader>D ?def
 
 
 """ The below is from other sources
-set number
-set relativenumber
-
-set title
 
 " Search results centered please
 nnoremap <silent> n nzz
@@ -543,7 +543,7 @@ Plug 'hrsh7th/cmp-buffer', {'branch':'main'}
 Plug 'hrsh7th/nvim-cmp', {'branch':'main'}
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'w0rp/ale'
-Plug 'j-hui/fidget.nvim'
+Plug 'j-hui/fidget.nvim', {'branch':'main'}
 "Plug 'ncm2/ncm2'
 "Plug 'roxma/nvim-yarp'
 "Plug 'ncm2/ncm2-bufword'
@@ -555,7 +555,7 @@ Plug 'j-hui/fidget.nvim'
 "Plug 'glepnir/lspsaga.nvim'
 
 " Specific Langauge Support
-Plug 'plasticboy/vim-markdown'
+" Plug 'plasticboy/vim-markdown'
 Plug 'hdima/python-syntax'
 Plug 'lervag/vimtex'
 Plug 'cespare/vim-toml', {'branch':'main'}
@@ -655,13 +655,13 @@ set background=dark
 let base16colorspace=256
 colorscheme base16-gruvbox-dark-hard
 hi Comment ctermfg=30 guifg=#64CBC8
-hi Normal guibg=NONE ctermbg=NONE
+hi Normal ctermbg=NONE guibg=NONE
 " Brighter comments
 call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
 
 " !!!------------------ Tagbar Config ----------------------------!!!
 nmap <F8> :TagbarToggle<CR>
-let g:tagbar_ctags_bin="~/.config/nvim/tags/ctags-5.8/ctags"
+let g:tagbar_ctags_bin="/usr/local/bin/ctags"
 
 " !!!------------------ Ale Config ----------------------------!!!
 nnoremap <leader>G :ALEGoToDefinition<CR>
@@ -691,6 +691,9 @@ let g:ale_sign_warning = '++'
 let g:ale_fixers = { 'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lines'] }
 
 nmap <silent> <leader>e <Plug>(ale_next_wrap)
+
+autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/
+autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" | redraw!
 
 " !!!------------------ LSP Config ----------------------------!!!
 
@@ -763,7 +766,6 @@ end
       { name = 'buffer' },
     })
   })
-
 require"fidget".setup{
 {
   text = {
@@ -773,8 +775,8 @@ require"fidget".setup{
     completed = "Completed",  -- message shown when task completes
   },
   align = {
-    bottom = false,
-    right = true,
+    bottom = false,            -- align fidgets along bottom edge of buffer
+    right = true,             -- align fidgets along right edge of buffer
   },
   timer = {
     spinner_rate = 125,       -- frame rate of spinner animation, in ms
@@ -783,6 +785,7 @@ require"fidget".setup{
   },
   fmt = {
     leftpad = true,           -- right-justify text in fidget box
+    stack_upwards = true,     -- list of tasks grows upwards
     fidget =                  -- function to format fidget title
       function(fidget_name, spinner)
         return string.format("%s %s", spinner, fidget_name)
