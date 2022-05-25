@@ -1,3 +1,5 @@
+; This config is for my laptop. It rarely uses multiple monitors and has a battery, unlike my desktop.
+
 [colors]
 background = #222
 background-alt = #444
@@ -8,7 +10,7 @@ secondary = #e60053
 alert = #bd2c40
 
 [bar/primary]
-monitor = ${env:MONITORS[0]:DP-0}
+monitor = ${env:MONITORS[0]:eDP-1}
 width = 100%
 height = 2.5%
 radius = 6.0
@@ -28,9 +30,9 @@ font-1 = "Noto Sans Mono:size=10;1"
 font-2 = "Noto Sans Symbols:size=10;1"
 font-3 = "Noto Sans Symbols2:size=10;1"
 
-modules-right = cpu
+modules-left = date wireless-network 
 modules-center = i3
-modules-left = wireless-network github
+modules-right = memory cpu battery
 
 tray-position = right
 tray-padding = 2
@@ -42,7 +44,7 @@ scroll-down = i3wm-wsnext
 scroll-up = i3wm-wsprev
 
 [bar/secondary]
-monitor = ${env:MONITORS[1]:DP-2}
+monitor = ${env:MONITORS[0]:HDMI-2}
 width = 100%
 height = 2.5%
 radius = 6.0
@@ -51,9 +53,6 @@ bottom = true
 
 background = ${colors.background}
 foreground = ${colors.foreground}
-
-scroll-down = i3wm-wsnext
-scroll-up = i3wm-wsprev
 
 border-size = 0
 line-size = 2
@@ -65,9 +64,19 @@ font-1 = "Noto Sans Mono:size=10;1"
 font-2 = "Noto Sans Symbols:size=10;1"
 font-3 = "Noto Sans Symbols2:size=10;1"
 
-modules-left = date spotify
+modules-left = date wireless-network 
 modules-center = i3
-modules-right = memory
+modules-right = memory cpu battery
+
+tray-position = right
+tray-padding = 2
+tray-maxsize = 24
+
+wm-restack = i3
+
+scroll-down = i3wm-wsnext
+scroll-up = i3wm-wsprev
+
 
 [global/wm]
 margin-top = 0
@@ -78,7 +87,7 @@ label = %title:0:30:...%
 
 [module/memory]
 type = internal/memory
-interval = 0.25
+interval = 2
 format-prefix = "🗍 "
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #4bffdc
@@ -143,13 +152,13 @@ format-disconnected =
 
 [module/date]
 type = internal/date
-interval = 1
+interval = 5
 
 date = "%a %d"
 date-alt = %a %b %d
 
-time = %I:%M
-time-alt = %I:%M%p
+time = %H:%M
+time-alt = %H:%M%p
 
 format-prefix =
 format-prefix-foreground = ${colors.foreground-alt}
@@ -159,8 +168,8 @@ label = %date% %time%
 
 [module/github]
 type = internal/github
-token = ${file:~/.config/github/notifications.token}
-user = TylerBloom
+token = ${file:/home/jon/.config/github/notifications.token}
+user = tylerbloom
 empty-notifications = false
 ;label = %{u#ff9900 +u} %notifications% %{u-}
 label = %{u#0099ff +u} 📫 %{u-}
@@ -255,8 +264,8 @@ label-separator-foreground = #ffb52a
 
 [module/wireless-network]
 type = internal/network
-interface = wlp4s0
-;interface = wlan0
+;interface = enp4s0
+interface = wlp2s0
 interval = 1.0
 ping-interval = 10
 
@@ -279,7 +288,7 @@ animation-packetloss-framerate = 500
 
 [module/cpu]
 type = internal/cpu
-interval = 0.2
+interval = 0.5
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #f90000
 format = <label> <ramp-coreload>
@@ -315,8 +324,41 @@ interval = 0.5
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #1db954
 format = Playing: <label>
-exec = python3   /home/tyler/.config/polybar/spotify.py  -f '{play_pause} {song} - {artist} - {album}'
+exec = python3   /home/tylerbloom/.config/polybar/spotify.py  -f '{play_pause} {song} - {artist} - {album}'
 
+[module/battery]
+type = internal/battery
+full-at = 98
 
-;vim:ft=dosini
+format-charging = <animation-charging> <label-charging>
+format-discharging = <ramp-capacity> <label-discharging>
+format-full = <ramp-capacity> <label-full>
+
+label-charging = %percentage%% %time%h
+label-discharging = %percentage%% %time%h 
+ramp-capacity-0 = 
+ramp-capacity-0-foreground = #f53c3c
+ramp-capacity-1 = 
+ramp-capacity-1-foreground = #ffa900
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+bar-capacity-width = 10
+bar-capacity-format = %{+u}%{+o}%fill%%empty%%{-u}%{-o}
+bar-capacity-fill = █
+bar-capacity-fill-foreground = #ddffffff
+bar-capacity-fill-font = 3
+bar-capacity-empty = █
+bar-capacity-empty-font = 3
+bar-capacity-empty-foreground = #44ffffff
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-framerate = 750
+
+; vim:ft=dosini
 
