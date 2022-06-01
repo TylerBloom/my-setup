@@ -542,7 +542,7 @@ Plug 'hrsh7th/cmp-nvim-lsp', {'branch':'main'}
 Plug 'hrsh7th/cmp-buffer', {'branch':'main'}
 Plug 'hrsh7th/nvim-cmp', {'branch':'main'}
 Plug 'ray-x/lsp_signature.nvim'
-Plug 'w0rp/ale'
+"Plug 'w0rp/ale'
 Plug 'j-hui/fidget.nvim', {'branch':'main'}
 "Plug 'ncm2/ncm2'
 "Plug 'roxma/nvim-yarp'
@@ -592,7 +592,6 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Enable type inlay hints
 autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = "  >> ", aligned = true }
-noremap <leader>E :lua vim.lsp.diagnostic.show_line_diagnostics{focus=false}<CR>
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -659,43 +658,49 @@ hi Normal ctermbg=NONE guibg=NONE
 " Brighter comments
 call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
 
-" !!!------------------ Tagbar Config ----------------------------!!!
-nmap <F8> :TagbarToggle<CR>
-let g:tagbar_ctags_bin="/usr/local/bin/ctags"
-
-" !!!------------------ Ale Config ----------------------------!!!
-nnoremap <leader>G :ALEGoToDefinition<CR>
-
-let g:ale_linters = {
-\  'rust': ['analyzer'],
-\}
-
-" Correct
-" highlight ALEWarning cterm=underline ctermbg=DarkMagenta
-
-highlight clear ALEWarning
-highlight clear ALEError
-highlight clear ALEErrorSign
-
-highlight ALEWarning cterm=underline
-highlight ALEError cterm=underline
-
-"function! g:Base16hi(group, guifg, guibg, ctermfg, ctermbg, ...)
-call Base16hi("ALEWarning", "", "", "", g:base16_cterm02, "" )
-call Base16hi("ALEError", "", "", "", g:base16_cterm02, "" )
-call Base16hi("ALEErrorSign", "", "", g:base16_cterm08, g:base16_cterm01, "" )
-
-let g:ale_sign_error = '**'
-let g:ale_sign_warning = '++'
-
-let g:ale_fixers = { 'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lines'] }
-
-nmap <silent> <leader>e <Plug>(ale_next_wrap)
-
-autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/
-autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" | redraw!
-
 " !!!------------------ LSP Config ----------------------------!!!
+
+" Goto mappings
+nnoremap <silent> <buffer> <leader>g <Cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> <buffer> <leader>G <Cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> <buffer> <leader>r <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> <buffer> <leader>i <cmd>lua vim.lsp.buf.implementation()<CR> 
+
+" Error mappings
+nnoremap <silent> <buffer> <leader>eh <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <silent> <buffer> <leader>el <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+nnoremap <silent> <buffer> <leader>e  <cmd>lua vim.diagnostic.open_float(0, {scope="cursor"})<CR>
+nnoremap <silent> <buffer> <leader>E  <cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>
+nnoremap <silent> <buffer> <leader>ea <cmd>lua vim.lsp.diagnostic.set_loclist()<CR>
+
+" Misc mappings
+nnoremap <silent> <buffer> <leader><C-r> <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <silent> <buffer> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
+
+" Error highlighting
+call Base16hi("ErrorSignHL", "", "", g:base16_cterm08, g:base16_cterm01, "")
+call Base16hi("WarnSignHL", "", "", g:base16_cterm0A, g:base16_cterm01, "")
+call Base16hi("HintSignHL", "", "", g:base16_cterm0B, g:base16_cterm01, "")
+
+sign define DiagnosticSignError text=** texthl=ErrorSignHL
+sign define DiagnosticSignWarn text=++ texthl=WarnSignHl
+sign define DiagnosticSignHint text=>> texthl=HintSignHl
+
+highlight clear DiagnosticError
+highlight clear DiagnosticVirtualTextWarn
+highlight clear DiagnosticWarn
+highlight clear DiagnosticVirtualTextError
+
+""function! g:Base16hi(group, guifg, guibg, ctermfg, ctermbg, ...)
+highlight DiagnosticError cterm=underline
+call Base16hi("DiagnosticError", "", "", g:base16_cterm08, "", "" )
+call Base16hi("DiagnosticWarn", "", "", g:base16_cterm0A, "", "" )
+call Base16hi("DiagnosticHint", "", "", g:base16_cterm0B, "", "" )
+call Base16hi("DiagnosticVirtualTextError", "", "", g:base16_cterm08, "", "" )
+call Base16hi("DiagnosticVirtualTextWarning", "", "", g:base16_cterm0A, "", "" )
+call Base16hi("DiagnosticVirtualTextHint", "", "", g:base16_cterm0A, "", "" )
+
+"
 
 " LSP configuration
 lua << END
@@ -706,22 +711,6 @@ local on_attach = function(client, bufnr)
 
   -- Mappings.
   local opts = { noremap=true, silent=true }
-
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
   -- Forward to other plugins
   require'completion'.on_attach(client)
