@@ -2,6 +2,7 @@ abbr -a yr 'cal -y'
 abbr -a vim 'nvim'
 abbr -a adg ". ~/.local/bin/adg.fish"
 abbr -a vimdiff 'nvim -d'
+abbr -a clear 'clear && fish_greeting'
 complete --command aurman --wraps pacman
 
 if status --is-interactive
@@ -154,6 +155,29 @@ function get_dir_str
 	echo $digest | sed 's/.$//'
 end
 
+function build_git_prompt
+  set git_output (echo (git rev-parse --is-inside-work-tree 2> /dev/null))
+  if test $git_output = 'true'
+    set digest (git branch | grep "\* *" | sed 's/* \(.*\)/\1/g')
+    set git_status (echo (git status))
+    set buffer ""
+    set extra ""
+    if test -n (echo (string match "*Untracked files:*" -- $git_status))
+      set buffer " "
+      set extra "+"
+    end
+    if test -n (echo (string match "*Changes not staged for commit*" -- $git_status))
+      set buffer " "
+      set extra "$extra*"
+    end
+    if test -n (echo (string match "*Changes to be committed*" -- $git_status))
+      set buffer " "
+      set extra "$extra%"
+    end
+    echo " ($digest$buffer$extra)"
+  end
+end
+
 function fish_prompt
 	set_color brblack
 	echo -n "["(date "+%H:%M")"] "
@@ -166,10 +190,23 @@ function fish_prompt
 		echo -n (get_dir_str)
 	end
 	set_color green
-	printf '%s ' (__fish_git_prompt)
+	printf '%s ' (build_git_prompt)
 	set_color red
 	echo -n '| '
 	set_color normal
+end
+
+function print_disk_usage
+  set disk_percent (df | grep -e '\([0-9]\+%\)\s\+/\s*$' | awk -F"[ %]+" '{print $5}')
+  if test $disk_percent -lt "50"
+    set_color green
+  else if test $disk_percent -lt "80"
+    set_color yellow
+  else 
+    set_color red
+  end
+	echo -e " \\e[1mDisk usage:\\e\ "$disk_percent"%"
+  set_color normal
 end
 
 function fish_greeting
@@ -177,7 +214,7 @@ function fish_greeting
 	echo -e (uname -ro | awk '{print " \\\\e[1mOS: \\\\e[0;32m"$0"\\\\e[0m"}')
 	echo -e (uptime -p | sed 's/^up //' | awk '{print " \\\\e[1mUptime: \\\\e[0;32m"$0"\\\\e[0m"}')
 	echo -e (uname -n | awk '{print " \\\\e[1mHostname: \\\\e[0;32m"$0"\\\\e[0m"}')
-	echo -e " \\e[1mDisk usage:\\e[0m"
+	echo -e (print_disk_usage)
 	echo
 	echo -ne (\
 		df -l -h | grep -E 'dev/(xvda|sd|mapper)' | \
@@ -200,7 +237,7 @@ function fish_greeting
 				-e 's/\/.*//'| \
 			awk 'BEGIN {i=""} /\.|:/ {print i" "$0"\\\n"; next} // {i = $0}' | \
 			sort | \
-			column -t -R1 | \
+			#column -t -R1 | \
 			# public addresses are underlined for visibility \
 			sed 's/ \([^ ]\+\)$/ \\\e[4m\1/' | \
 			# private addresses are not \

@@ -314,7 +314,7 @@ type = custom/script
 interval = 0.5
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #1db954
-format = Playing: <label>
+format = <label>
 exec = python3   /home/tyler/.config/polybar/spotify.py  -f '{play_pause} {song} - {artist} - {album}'
 
 
