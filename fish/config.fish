@@ -1,8 +1,11 @@
 abbr -a yr 'cal -y'
+abbr -a vi 'nvim'
 abbr -a vim 'nvim'
+abbr -a up 'cd ../'
 abbr -a adg ". ~/.local/bin/adg.fish"
 abbr -a vimdiff 'nvim -d'
-abbr -a clear 'clear && fish_greeting'
+abbr -a refresh 'clear && fish_greeting'
+abbr -a ref 'clear && fish_greeting'
 complete --command aurman --wraps pacman
 
 source $HOME/code/toolchain/shell/env.fish

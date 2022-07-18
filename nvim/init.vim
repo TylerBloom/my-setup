@@ -400,6 +400,10 @@ nnoremap ? ?\v
 nnoremap / /\v
 cnoremap %s/ %sm/
 
+" Make "this word" searches very magic too for easy re-lookups
+nnoremap * /\v<<C-R>=expand('<cword>')<CR>><CR>
+nnoremap # ?\v<<C-R>=expand('<cword>')<CR>><CR>
+
 " Stops the deletion of auto-indents if the auto-indented line is left blank
 " set cindent
 set tabstop=2
@@ -511,10 +515,9 @@ Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
-" Fuzzy finder
-
-" quickly wrap text in quotes, parenthesis, etc.
-Plug 'tpope/vim-surround'
+" Telescope
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
 
 " compile and run code from vim
 Plug 'skywind3000/asyncrun.vim'
@@ -525,8 +528,10 @@ Plug 'airblade/vim-current-search-match'
 
 " regex devel for python, java, ruby regexs
 Plug 'ervandew/regex'
+
 " align code
 Plug 'junegunn/vim-easy-align'
+
 " Code  formatting
 Plug 'Chiel92/vim-autoformat'
 
@@ -549,15 +554,6 @@ Plug 'hrsh7th/nvim-cmp', {'branch':'main'}
 Plug 'ray-x/lsp_signature.nvim'
 "Plug 'w0rp/ale'
 Plug 'j-hui/fidget.nvim', {'branch':'main'}
-"Plug 'ncm2/ncm2'
-"Plug 'roxma/nvim-yarp'
-"Plug 'ncm2/ncm2-bufword'
-"Plug 'ncm2/ncm2-path'
-"Plug 'sheerun/vim-polyglot'
-"Plug 'Shougo/echodoc.vim'
-"Plug 'vim-syntastic/syntastic'
-"Plug 'neoclide/coc.nvim', {'branch':'release'}
-"Plug 'glepnir/lspsaga.nvim'
 
 " Specific Langauge Support
 " Plug 'plasticboy/vim-markdown'
@@ -654,6 +650,14 @@ let g:NERDToggleCheckAllLines = 1
 
 set signcolumn=yes
 
+" !!!------------------ Telescpoe Config -------------------!!!
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers initial_mode=normal<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <silent> <leader>t <cmd>Telescope lsp_document_symbols initial_mode=normal<CR> 
+
 " !!!------------------ Color Scheme Config -------------------!!!
 set background=dark
 let base16colorspace=256
@@ -662,25 +666,27 @@ hi Comment ctermfg=30 guifg=#64CBC8
 hi Normal ctermbg=NONE guibg=NONE
 " Brighter comments
 call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
+" Highlight currently argument 
+call Base16hi("LspSignatureActiveParameter", g:base16_gui05, g:base16_gui03, g:base16_cterm05, g:base16_cterm03, "bold", "")
 
 " !!!------------------ LSP Config ----------------------------!!!
 
 " Goto mappings
-nnoremap <silent> <buffer> <leader>g <Cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent> <buffer> <leader>G <Cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> <buffer> <leader>r <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> <buffer> <leader>i <cmd>lua vim.lsp.buf.implementation()<CR> 
+nnoremap <silent> <leader>g <Cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> <leader>G <Cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> <leader>r <cmd>Telescope lsp_references initial_mode=normal<CR>
+nnoremap <silent> <leader>i <cmd>Telescope lsp_implementation initial_mode=normal<CR> 
 
 " Error mappings
-nnoremap <silent> <buffer> <leader>eh <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-nnoremap <silent> <buffer> <leader>el <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
-nnoremap <silent> <buffer> <leader>e  <cmd>lua vim.diagnostic.open_float(0, {scope="cursor"})<CR>
-nnoremap <silent> <buffer> <leader>E  <cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>
-nnoremap <silent> <buffer> <leader>ea <cmd>lua vim.lsp.diagnostic.set_loclist()<CR>
+nnoremap <silent> <leader>eh <cmd>lua vim.diagnostic.goto_prev()<CR>
+nnoremap <silent> <leader>el <cmd>lua vim.diagnostic.goto_next()<CR>
+nnoremap <silent> <leader>e  <cmd>lua vim.diagnostic.open_float(0, {scope="cursor"})<CR>
+nnoremap <silent> <leader>E  <cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>
+nnoremap <silent> <leader>ea <cmd>Telescope diagnostics initial_mode=normal<CR>
 
 " Misc mappings
-nnoremap <silent> <buffer> <leader><C-r> <cmd>lua vim.lsp.buf.rename()<CR>
-nnoremap <silent> <buffer> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
+nnoremap <silent> <leader><C-r> <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <silent> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
 
 " Error highlighting
 call Base16hi("ErrorSignHL", "", "", g:base16_cterm08, g:base16_cterm01, "")
