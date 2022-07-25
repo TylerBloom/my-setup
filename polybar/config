@@ -1,8 +1,7 @@
 [colors]
-background = #222
-background-alt = #444
-foreground = #dfdfdf
-foreground-alt = #888
+background = #1d2021
+background-alt = #3c3836
+foreground = #ebdbb2
 primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
@@ -81,7 +80,7 @@ label = %title:0:30:...%
 type = internal/memory
 interval = 0.25
 format-prefix = "🗍 "
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix-foreground = ${colors.foreground}
 format-underline = #83a598
 format = <label> <bar-used>
 label = RAM
@@ -111,7 +110,7 @@ time = %I:%M
 time-alt = %I:%M%p
 
 format-prefix =
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix-foreground = ${colors.foreground}
 format-underline = #8ec07c
 label = %date% %time%
 
@@ -145,8 +144,7 @@ label-mode-padding = 0
 label-mode-background = #e60053
 
 label-focused =  %name%
-label-focused-foreground = #ffffff
-label-focused-background = #3f3f3f
+label-focused-background = #504945
 label-focused-underline = #fba922
 label-focused-padding = 4
 
@@ -164,7 +162,7 @@ label-urgent-padding = 4
 
 label-separator = |
 label-separator-padding = 0
-label-separator-foreground = #ffb52a
+label-separator-foreground = #fabd2f
 
 [module/wireless-network]
 type = internal/network
@@ -189,7 +187,7 @@ ramp-signal-4 = 
 [module/cpu]
 type = internal/cpu
 interval = 0.2
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix-foreground = ${colors.foreground}
 format-underline = #f90000
 format = <label> <ramp-coreload>
 label = CPU
@@ -221,7 +219,7 @@ ramp-coreload-7-foreground = #fb4934
 [module/spotify]
 type = custom/script
 interval = 0.5
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix-foreground = ${colors.foreground}
 format-underline = #1db954
 format = <label>
 exec = python3   /home/tyler/.config/polybar/spotify.py  -f '{play_pause} {song} - {artist} - {album}'
