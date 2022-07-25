@@ -511,13 +511,14 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'majutsushi/tagbar'
 
 " NERDTree
-Plug 'scrooloose/nerdtree'
+" Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope-file-browser.nvim'
 
 " compile and run code from vim
 Plug 'skywind3000/asyncrun.vim'
@@ -614,18 +615,6 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
-" !!!-------------------- NERDTree Config --------------------!!!
-" Ctrl-n opens/closes nerd tree
-map <C-n> :NERDTreeToggle<CR>
-let g:NERDTreeWinPos = "right"
-let NERDTreeShowHidden=0
-let NERDTreeIgnore = ['\.pyc$', '__pycache__']
-let g:NERDTreeWinSize=35
-
-" Exit Vim if NERDTree is the only window left.
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
-    \ quit | endif
-
 " !!!------------------ NERD Commenter Config -------------------!!!
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
@@ -650,13 +639,16 @@ let g:NERDToggleCheckAllLines = 1
 
 set signcolumn=yes
 
-" !!!------------------ Telescpoe Config -------------------!!!
+" !!!------------------ Telescope Config -------------------!!!
 " Find files using Telescope command-line sugar.
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>ff <cmd>Telescope file_browser initial_mode=normal<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep initial_mode=normal<cr>
 nnoremap <leader>fb <cmd>Telescope buffers initial_mode=normal<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags initial_mode=normal<cr>
 nnoremap <silent> <leader>t <cmd>Telescope lsp_document_symbols initial_mode=normal<CR> 
+
+" Old habits from NerdTree die hard...
+nnoremap <C-n> <cmd>Telescope file_browser initial_mode=normal<cr>
 
 " !!!------------------ Color Scheme Config -------------------!!!
 set background=dark
@@ -680,10 +672,9 @@ nnoremap <silent> <leader>i <cmd>Telescope lsp_implementation initial_mode=norma
 " Error mappings
 nnoremap <silent> <leader>eh <cmd>lua vim.diagnostic.goto_prev()<CR>
 nnoremap <silent> <leader>el <cmd>lua vim.diagnostic.goto_next()<CR>
-nnoremap <silent> <leader>e  <cmd>lua vim.diagnostic.open_float(0, {scope="cursor"})<CR>
+nnoremap <silent> <leader>ee  <cmd>lua vim.diagnostic.open_float(0, {scope="cursor"})<CR>
 nnoremap <silent> <leader>E  <cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>
-nnoremap <silent> <leader>ea <cmd>Telescope diagnostics initial_mode=normal<CR>
-
+nnoremap <silent> <leader>e <cmd>Telescope diagnostics severity_limit=1 initial_mode=normal<CR>
 " Misc mappings
 nnoremap <silent> <leader><C-r> <cmd>lua vim.lsp.buf.rename()<CR>
 nnoremap <silent> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
@@ -802,6 +793,17 @@ require"fidget".setup{
   },
 }
 }
+require("telescope").setup {
+  extensions = {
+    file_browser = {
+      -- disables netrw and use telescope-file-browser in its place
+      hijack_netrw = true,
+    },
+  },
+}
+-- To get telescope-file-browser loaded and working with telescope,
+-- you need to call load_extension, somewhere after setup function:
+require("telescope").load_extension "file_browser"
 END
 
 autocmd FileType lua lua require'cmp'.setup.buffer {
