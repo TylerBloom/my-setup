@@ -1,7 +1,7 @@
 [colors]
 background = #1d2021
 background-alt = #3c3836
-foreground = #ebdbb2
+foreground = #fbf1c7
 primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
@@ -128,16 +128,9 @@ index-sort = true
 
 fuzzy-match = true
 
-ws-icon-0 = 1;♚
-ws-icon-1 = 2;♛
-ws-icon-2 = 3;♜
-ws-icon-3 = 4;♝
-ws-icon-4 = 5;♞
-ws-icon-default = ♟
-
 label-dimmed-underline = ${root.background}
 
-format = <label-state> <label-mode>
+format = <label-state> <label-mode> 
 
 label-mode = %mode%
 label-mode-padding = 0
