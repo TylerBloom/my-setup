@@ -16,7 +16,6 @@ bottom = true
 
 background = ${colors.background}
 foreground = ${colors.foreground}
-
 border-size = 0
 line-size = 2
 padding = 1
@@ -79,7 +78,7 @@ label = %title:0:30:...%
 [module/memory]
 type = internal/memory
 interval = 0.25
-format-prefix = "🗍 "
+format-prefix = "  "
 format-prefix-foreground = ${colors.foreground}
 format-underline = #83a598
 format = <label> <bar-used>
@@ -166,15 +165,15 @@ ping-interval = 10
 format-connected = <ramp-signal> <label-connected>
 label-connected =⬆️ %upspeed%  ⬇️ %downspeed% 
 label-connected-underline = #fe8019
-label-disconnected =    not connected
+label-disconnected =     not connected
 label-disconnected-foreground = #66
 label-disconnected-underline = #fb4934
 
-ramp-signal-0 = 
-ramp-signal-1 = 
-ramp-signal-2 = 
-ramp-signal-3 = 
-ramp-signal-4 = 
+ramp-signal-0 =
+ramp-signal-1 =
+ramp-signal-2 =
+ramp-signal-3 =
+ramp-signal-4 =
 
 
 [module/cpu]
@@ -224,17 +223,20 @@ full-at = 98
 
 format-charging = <animation-charging> <label-charging>
 format-discharging = <ramp-capacity> <label-discharging>
-format-full = <ramp-capacity> <label-full>
+format-full = <label-full> <ramp-capacity> 
 
 label-charging = %percentage%% %time%h
 label-discharging = %percentage%% %time%h 
-ramp-capacity-0 = 
-ramp-capacity-0-foreground = #f53c3c
-ramp-capacity-1 = 
-ramp-capacity-1-foreground = #ffa900
-ramp-capacity-2 = 
-ramp-capacity-3 = 
-ramp-capacity-4 = 
+ramp-capacity-0 = ▁ 
+ramp-capacity-0-foreground = #ff5555
+ramp-capacity-1 = ▃ 
+ramp-capacity-1-foreground = #ff5555
+ramp-capacity-2 = ▅ 
+ramp-capacity-2-foreground = #d65d0e
+ramp-capacity-3 = ▇ 
+ramp-capacity-3-foreground = #fabd2f
+ramp-capacity-4 = █ 
+ramp-capacity-4-foreground = #8ec07c
 
 bar-capacity-width = 10
 bar-capacity-format = %{+u}%{+o}%fill%%empty%%{-u}%{-o}
@@ -245,10 +247,15 @@ bar-capacity-empty = █
 bar-capacity-empty-font = 3
 bar-capacity-empty-foreground = #44ffffff
 
-animation-charging-0 = 
-animation-charging-1 = 
-animation-charging-2 = 
-animation-charging-3 = 
-animation-charging-4 = 
+animation-charging-0 = ▁ 
+animation-charging-0-foreground = #ff5555 
+animation-charging-1 = ▃                
+animation-charging-1-foreground = #ff5555 
+animation-charging-2 = ▅                
+animation-charging-2-foreground = #d65d0e 
+animation-charging-3 = ▇                
+animation-charging-3-foreground = #fabd2f 
+animation-charging-4 = █                
+animation-charging-4-foreground = #8ec07c 
 animation-charging-framerate = 750
 
