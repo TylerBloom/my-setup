@@ -452,6 +452,8 @@ noremap   <Right>  <NOP>
 " Jump to start and end of line using the home row keys
 nmap H ^
 nmap L $
+vmap H ^
+vmap L $
 
 " Ctrl+j and Ctrl+k as Esc
 " Ctrl-j is a little awkward unfortunately:
@@ -516,7 +518,8 @@ Plug 'airblade/vim-current-search-match'
 
 " General Langauge Support
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/lsp_extensions.nvim' " Minor Rust analyzer support (inlayed hints)
+Plug 'simrat39/inlay-hints.nvim' " Minor Rust analyzer support (inlayed hints)
+Plug 'simrat39/rust-tools.nvim'
 Plug 'nvim-lua/completion-nvim'
 Plug 'hrsh7th/cmp-nvim-lsp', {'branch':'main'}
 Plug 'hrsh7th/cmp-buffer', {'branch':'main'}
@@ -559,9 +562,6 @@ let g:completion_trigger_keyword_length = 2 " default = 1
 set completeopt=menu,menuone
 inoremap <expr><TAB>   pumvisible() ? "\<C-n>" : "\<Tab>" 
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" Enable type inlay hints
-autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = "  >> ", aligned = true }
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -694,6 +694,61 @@ cmp.setup({
   experimental = {
     ghost_text = true,
   },
+})
+
+
+--- Inlayed hints ---
+local ih = require("inlay-hints").setup({
+  eol = {
+    right_align = true,
+    type = {
+      separator = " ",
+      format = function(hints)
+        return string.format(" >> (%s)", hints)
+      end,
+    },
+  }
+})
+
+require("rust-tools").setup({
+  server = {
+    on_attach = function(_, bufnr)
+      -- Hover actions
+      vim.keymap.set("n", "<space>p", rt.hover_actions.hover_actions, { buffer = bufnr })
+    end,
+  },
+  tools = {
+    on_initialized = function()
+      ih.set_all()
+    end,
+    inlay_hints = {
+      -- automatically set inlay hints (type hints)
+      auto = true,
+
+      -- whether to show parameter hints with the inlay hints or not
+      show_parameter_hints = false,
+
+      -- prefix for all the other hints (type, chaining)
+      other_hints_prefix = " >> ",
+
+      -- whether to align to the length of the longest line in the file
+      max_len_align = true,
+
+      -- padding from the left if max_len_align is true
+      max_len_align_padding = 1,
+
+      -- whether to align to the extreme right or not
+      right_align = false,
+
+      -- padding from the right if right_align is true
+      right_align_padding = 21,
+
+      -- The color of the hints
+      highlight = nil,
+    },
+  },
+
+
 })
 
 -- Enable completing paths in :
