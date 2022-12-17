@@ -10,18 +10,21 @@ try:
 
     spotify_properties = dbus.Interface(spotify_bus, "org.freedesktop.DBus.Properties")
 
-    metadata = spotify_properties.Get("org.mpris.MediaPlayer2.Player", "Metadata")
+    status = spotify_properties.Get("org.mpris.MediaPlayer2.Player", "PlaybackStatus")
 
-    artist = metadata['xesam:artist'][0]
-    song = metadata['xesam:title']
+    if status == "Paused":
+        print(f'Spotify {status}')
+    else:
+        metadata = spotify_properties.Get("org.mpris.MediaPlayer2.Player", "Metadata")
 
-    if len(song) > trunclen:
-        song = song[0:trunclen]
-        song += '...' 
-        if ('(' in song) and (')' not in song):
-            song += ')'
+        artist = metadata['xesam:artist'][0]
+        song = metadata['xesam:title']
 
-    output = artist + ': ' + song
-    print(output)
+        if len(song) > trunclen:
+            song = song[0:trunclen]
+            song += '...'
+            if ('(' in song) and (')' not in song):
+                song += ')'
+        print(f'Playing: {song} by {artist}')
 except:
     print("")

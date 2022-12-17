@@ -1,10 +1,7 @@
-; This config is for my laptop. It rarely uses multiple monitors and has a battery, unlike my desktop.
-
 [colors]
-background = #222
-background-alt = #444
-foreground = #dfdfdf
-foreground-alt = #888
+background = #1d2021
+background-alt = #3c3836
+foreground = #ebdbb2
 primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
@@ -30,9 +27,9 @@ font-1 = "Noto Sans Mono:size=10;1"
 font-2 = "Noto Sans Symbols:size=10;1"
 font-3 = "Noto Sans Symbols2:size=10;1"
 
-modules-left = date wireless-network 
+modules-left = date memory
 modules-center = i3
-modules-right = memory cpu battery
+modules-right = cpu wireless-network battery
 
 tray-position = right
 tray-padding = 2
@@ -77,7 +74,6 @@ wm-restack = i3
 scroll-down = i3wm-wsnext
 scroll-up = i3wm-wsprev
 
-
 [global/wm]
 margin-top = 0
 
@@ -87,10 +83,10 @@ label = %title:0:30:...%
 
 [module/memory]
 type = internal/memory
-interval = 2
+interval = 0.25
 format-prefix = "🗍 "
-format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #4bffdc
+format-prefix-foreground = ${colors.foreground}
+format-underline = #83a598
 format = <label> <bar-used>
 label = RAM
 
@@ -108,72 +104,20 @@ bar-used-empty = ─
 bar-used-empty-font = 6
 bar-used-empty-foreground = #444444
 
-
-[module/wlan]
-type = internal/network
-interface = wlp2s0
-interval = 5.0
-
-format-connected = <ramp-signal> <label-connected>
-format-connected-underline = #9f78e1
-label-connected = %essid%
-
-label-disconnected =
-
-ramp-signal-0 = 🌧
-ramp-signal-1 = 🌦
-ramp-signal-2 = 🌥
-ramp-signal-3 = 🌤
-ramp-signal-4 = 🌣
-
-[module/eth2]
-type = internal/network
-interface = enp12s0u1
-interval = 3.0
-
-format-connected-underline = #115511
-format-connected-prefix = "🖧 "
-format-connected-prefix-foreground = ${colors.foreground-alt}
-label-connected = %local_ip%
-
-format-disconnected =
-
-[module/eth1]
-type = internal/network
-interface = enp0s31f6
-interval = 3.0
-
-format-connected-underline = #55aa55
-format-connected-prefix = "🖧 "
-format-connected-prefix-foreground = ${colors.foreground-alt}
-label-connected = %local_ip%
-
-format-disconnected =
-
 [module/date]
 type = internal/date
-interval = 5
+interval = 1
 
 date = "%a %d"
 date-alt = %a %b %d
 
-time = %H:%M
-time-alt = %H:%M%p
+time = %I:%M
+time-alt = %I:%M%p
 
 format-prefix =
-format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #0a6cf5
-
+format-prefix-foreground = ${colors.foreground}
+format-underline = #8ec07c
 label = %date% %time%
-
-[module/github]
-type = internal/github
-token = ${file:/home/jon/.config/github/notifications.token}
-user = tylerbloom
-empty-notifications = false
-;label = %{u#ff9900 +u} %notifications% %{u-}
-label = %{u#0099ff +u} 📫 %{u-}
-interval = 10
 
 [settings]
 screenchange-reload = true
@@ -187,11 +131,6 @@ pin-workspaces = true
 strip-wsnumbers = true
 index-sort = true
 
-; Use fuzzy (partial) matching on labels when assigning 
-; icons to workspaces
-; Example: code;♚ will apply the icon to all workspaces 
-; containing 'code' in the label
-; Default: false
 fuzzy-match = true
 
 ws-icon-0 = 1;♚
@@ -203,76 +142,45 @@ ws-icon-default = ♟
 
 label-dimmed-underline = ${root.background}
 
-; Available tags:
-;   <label-state> (default) - gets replaced with <label-(focused|unfocused|visible|urgent)>
-;   <label-mode> (default)
 format = <label-state> <label-mode>
 
-; Available tokens:
-;   %mode%
-; Default: %mode%
 label-mode = %mode%
 label-mode-padding = 0
 label-mode-background = #e60053
 
-; Available tokens:
-;   %name%
-;   %icon%
-;   %index%
-;   %output%
-; Default: %icon%  %name%
 label-focused =  %name%
-label-focused-foreground = #ffffff
-label-focused-background = #3f3f3f
+label-focused-background = #504945
 label-focused-underline = #fba922
 label-focused-padding = 4
 
-; Available tokens:
-;   %name%
-;   %icon%
-;   %index%
-;   %output%
-; Default: %icon%  %name%
 label-unfocused = %name%
 label-unfocused-padding = 4
 
-; Available tokens:
-;   %name%
-;   %icon%
-;   %index%
-;   %output%
-; Default: %icon%  %name%
 label-visible = %name%
 label-visible-underline = #555555
 label-visible-padding = 4
 
-; Available tokens:
-;   %name%
-;   %icon%
-;   %index%
-;   %output%
-; Default: %icon%  %name%
 label-urgent = %name%
 label-urgent-foreground = #000000
 label-urgent-background = #bd2c40
 label-urgent-padding = 4
 
-; Separator in between workspaces
 label-separator = |
 label-separator-padding = 0
-label-separator-foreground = #ffb52a
+label-separator-foreground = #fabd2f
 
 [module/wireless-network]
 type = internal/network
-;interface = enp4s0
 interface = wlp2s0
 interval = 1.0
 ping-interval = 10
 
 format-connected = <ramp-signal> <label-connected>
-label-connected = %local_ip%    %downspeed%    %upspeed%
+label-connected =⬆️ %upspeed%  ⬇️ %downspeed% 
+label-connected-underline = #fe8019
 label-disconnected =    not connected
 label-disconnected-foreground = #66
+label-disconnected-underline = #fb4934
 
 ramp-signal-0 = 
 ramp-signal-1 = 
@@ -280,51 +188,47 @@ ramp-signal-2 = 
 ramp-signal-3 = 
 ramp-signal-4 = 
 
-animation-packetloss-0 = 
-animation-packetloss-0-foreground = #ffa64c
-animation-packetloss-1 = 
-animation-packetloss-1-foreground = ${bar/top.foreground}
-animation-packetloss-framerate = 500
 
 [module/cpu]
 type = internal/cpu
-interval = 0.5
-format-prefix-foreground = ${colors.foreground-alt}
+interval = 0.2
+format-prefix-foreground = ${colors.foreground}
 format-underline = #f90000
 format = <label> <ramp-coreload>
 label = CPU
 ramp-coreload-0 = ▁
 ramp-coreload-0-font = 2
-ramp-coreload-0-foreground = #aaff77
+ramp-coreload-0-foreground = #91eb00
 ramp-coreload-1 = ▂
 ramp-coreload-1-font = 2
-ramp-coreload-1-foreground = #aaff77
+ramp-coreload-1-foreground = #91eb00 
 ramp-coreload-2 = ▃
 ramp-coreload-2-font = 2
-ramp-coreload-2-foreground = #aaff77
+ramp-coreload-2-foreground = #91eb00 
 ramp-coreload-3 = ▄
 ramp-coreload-3-font = 2
-ramp-coreload-3-foreground = #aaff77
+ramp-coreload-3-foreground = #fabd2f 
 ramp-coreload-4 = ▅
 ramp-coreload-4-font = 2
-ramp-coreload-4-foreground = #fba922
+ramp-coreload-4-foreground = #fabd2f 
 ramp-coreload-5 = ▆
 ramp-coreload-5-font = 2
-ramp-coreload-5-foreground = #fba922
+ramp-coreload-5-foreground = #d65d0e 
 ramp-coreload-6 = ▇
 ramp-coreload-6-font = 2
-ramp-coreload-6-foreground = #ff5555
+ramp-coreload-6-foreground = #d65d0e 
 ramp-coreload-7 = █
 ramp-coreload-7-font = 2
-ramp-coreload-7-foreground = #ff5555
+ramp-coreload-7-foreground = #fb4934
 
 [module/spotify]
 type = custom/script
 interval = 0.5
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix-foreground = ${colors.foreground}
 format-underline = #1db954
-format = Playing: <label>
-exec = python3   /home/tylerbloom/.config/polybar/spotify.py  -f '{play_pause} {song} - {artist} - {album}'
+format = <label>
+exec = python3   /home/tyler/.config/polybar/spotify.py  -f '{play_pause} {song} - {artist} - {album}'
+
 
 [module/battery]
 type = internal/battery
@@ -359,6 +263,4 @@ animation-charging-2 = 
 animation-charging-3 = 
 animation-charging-4 = 
 animation-charging-framerate = 750
-
-; vim:ft=dosini
 
