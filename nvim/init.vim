@@ -637,6 +637,7 @@ nnoremap <silent> <leader>e <cmd>Telescope diagnostics severity_limit=1 initial_
 nnoremap <silent> <leader>R <cmd>lua vim.lsp.buf.rename()<CR>
 nnoremap <silent> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
 nnoremap <silent> <leader>i <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> <leader>C <cmd>lua require'rust-tools'.open_cargo_toml.open_cargo_toml()<CR>
 
 " Error highlighting
 call Base16hi("ErrorSignHL", "", "", g:base16_cterm08, g:base16_cterm01, "")
@@ -698,18 +699,6 @@ cmp.setup({
 
 
 --- Inlayed hints ---
-local ih = require("inlay-hints").setup({
-  eol = {
-    right_align = true,
-    type = {
-      separator = " ",
-      format = function(hints)
-        return string.format(" >> (%s)", hints)
-      end,
-    },
-  }
-})
-
 require("rust-tools").setup({
   server = {
     on_attach = function(_, bufnr)
@@ -736,15 +725,6 @@ require("rust-tools").setup({
 
       -- padding from the left if max_len_align is true
       max_len_align_padding = 1,
-
-      -- whether to align to the extreme right or not
-      right_align = false,
-
-      -- padding from the right if right_align is true
-      right_align_padding = 21,
-
-      -- The color of the hints
-      highlight = nil,
     },
   },
 
@@ -790,6 +770,11 @@ lspconfig.rust_analyzer.setup {
       cargo = {
         allFeatures = true,
       },
+      inlayHints = {
+      	chainingHints = {
+      	  enable = true,
+				}
+			},
       completion = {
 	      postfix = {
 	        enable = false,
