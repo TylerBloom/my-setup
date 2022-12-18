@@ -400,6 +400,10 @@ nnoremap ? ?\v
 nnoremap / /\v
 cnoremap %s/ %sm/
 
+" Make "this word" searches very magic too for easy re-lookups
+nnoremap * /\v<<C-R>=expand('<cword>')<CR>><CR>
+nnoremap # ?\v<<C-R>=expand('<cword>')<CR>><CR>
+
 " Stops the deletion of auto-indents if the auto-indented line is left blank
 " set cindent
 set tabstop=2
@@ -446,8 +450,10 @@ noremap   <Left>   <NOP>
 noremap   <Right>  <NOP>
 
 " Jump to start and end of line using the home row keys
-map H ^
-map L $
+nmap H ^
+nmap L $
+vmap H ^
+vmap L $
 
 " Ctrl+j and Ctrl+k as Esc
 " Ctrl-j is a little awkward unfortunately:
@@ -482,97 +488,59 @@ augroup AutoSaveFolds
   au BufWinEnter .* silent loadview
 augroup END
 
-call plug#begin("~/.vim/plugged")
-
-" pre config scripts
-Plug '~/.vim/rc/pre'
-
-" the official vim-plug repo
-Plug 'junegunn/vim-plug'
-Plug 'machakann/vim-highlightedyank'
+call plug#begin("~/.config/nvim/plugged")
 
 " Load plugins
 Plug 'ciaranm/securemodelines'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'justinmk/vim-sneak'
+Plug 'machakann/vim-highlightedyank'
 
 " Themes
 Plug 'chriskempson/base16-vim'
 
 " GUI enhancements
-"Plug 'itchyny/lightline.vim'
 Plug 'andymass/vim-matchup'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'majutsushi/tagbar'
 
 " NERDTree
-Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
-" Fuzzy finder
-
-" quickly wrap text in quotes, parenthesis, etc.
-Plug 'tpope/vim-surround'
-
-" compile and run code from vim
-Plug 'skywind3000/asyncrun.vim'
-Plug 'skywind3000/asynctasks.vim'
+" Telescope
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope-file-browser.nvim'
 
 " highlight the current match in a different color
 Plug 'airblade/vim-current-search-match'
 
-" regex devel for python, java, ruby regexs
-Plug 'ervandew/regex'
-" align code
-Plug 'junegunn/vim-easy-align'
-" Code  formatting
-Plug 'Chiel92/vim-autoformat'
-
-" writing utils
-Plug 'reedes/vim-wordy'
-Plug 'reedes/vim-lexical'
-Plug 'rhysd/vim-grammarous'
-
-" Snippets
-Plug 'SirVer/ultisnips', {'branch':'master'}
-Plug 'quangnguyen30192/cmp-nvim-ultisnips', {'branch':'main'}
-
 " General Langauge Support
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/lsp_extensions.nvim' " Minor Rust analyzer support (inlayed hints)
+Plug 'simrat39/inlay-hints.nvim' " Minor Rust analyzer support (inlayed hints)
+Plug 'simrat39/rust-tools.nvim'
 Plug 'nvim-lua/completion-nvim'
 Plug 'hrsh7th/cmp-nvim-lsp', {'branch':'main'}
 Plug 'hrsh7th/cmp-buffer', {'branch':'main'}
 Plug 'hrsh7th/nvim-cmp', {'branch':'main'}
 Plug 'ray-x/lsp_signature.nvim'
-"Plug 'w0rp/ale'
 Plug 'j-hui/fidget.nvim', {'branch':'main'}
-"Plug 'ncm2/ncm2'
-"Plug 'roxma/nvim-yarp'
-"Plug 'ncm2/ncm2-bufword'
-"Plug 'ncm2/ncm2-path'
-"Plug 'sheerun/vim-polyglot'
-"Plug 'Shougo/echodoc.vim'
-"Plug 'vim-syntastic/syntastic'
-"Plug 'neoclide/coc.nvim', {'branch':'release'}
-"Plug 'glepnir/lspsaga.nvim'
+
+" Snippets
+Plug 'hrsh7th/cmp-vsnip', {'branch': 'main'}
+Plug 'hrsh7th/vim-vsnip'
 
 " Specific Langauge Support
-" Plug 'plasticboy/vim-markdown'
 Plug 'hdima/python-syntax'
 Plug 'lervag/vimtex'
 Plug 'cespare/vim-toml', {'branch':'main'}
 Plug 'stephpy/vim-yaml'
-Plug 'rust-lang/rls'
 Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'dag/vim-fish'
 Plug 'godlygeek/tabular'
-
-" post config scripts
-Plug '~/.vim/rc/post'
+Plug 'plasticboy/vim-markdown'
 
 call plug#end()
 
@@ -595,9 +563,6 @@ set completeopt=menu,menuone
 inoremap <expr><TAB>   pumvisible() ? "\<C-n>" : "\<Tab>" 
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-" Enable type inlay hints
-autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = "  >> ", aligned = true }
-
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
@@ -609,26 +574,7 @@ let g:formatdef_rustfmt = '"rustfmt"'
 let g:formatters_rust = ['rustfmt']
 
 noremap <leader>f :Autoformat<CR>
-noremap <leader>t :RustTest<CR>
-
-" !!!-------------------- UltiSnips Config --------------------!!!
-let g:UltiSnipsExpandTrigger="<c-tab>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-
-" !!!-------------------- NERDTree Config --------------------!!!
-" Ctrl-n opens/closes nerd tree
-map <C-n> :NERDTreeToggle<CR>
-let g:NERDTreeWinPos = "right"
-let NERDTreeShowHidden=0
-let NERDTreeIgnore = ['\.pyc$', '__pycache__']
-let g:NERDTreeWinSize=35
-
-" Exit Vim if NERDTree is the only window left.
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
-    \ quit | endif
+noremap <leader>T :RustTest<CR>
 
 " !!!------------------ NERD Commenter Config -------------------!!!
 " Add spaces after comment delimiters by default
@@ -654,6 +600,13 @@ let g:NERDToggleCheckAllLines = 1
 
 set signcolumn=yes
 
+" !!!------------------ Telescope Config -------------------!!!
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope file_browser initial_mode=normal<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep initial_mode=insert<cr>
+nnoremap <leader>fb <cmd>Telescope buffers initial_mode=normal<cr>
+nnoremap <silent> <leader>t <cmd>Telescope lsp_document_symbols initial_mode=normal<CR> 
+
 " !!!------------------ Color Scheme Config -------------------!!!
 set background=dark
 let base16colorspace=256
@@ -662,25 +615,29 @@ hi Comment ctermfg=30 guifg=#64CBC8
 hi Normal ctermbg=NONE guibg=NONE
 " Brighter comments
 call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
+" Highlight currently argument 
+call Base16hi("LspSignatureActiveParameter", g:base16_gui05, g:base16_gui03, g:base16_cterm05, g:base16_cterm03, "bold", "")
 
 " !!!------------------ LSP Config ----------------------------!!!
 
 " Goto mappings
-nnoremap <silent> <buffer> <leader>g <Cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent> <buffer> <leader>G <Cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> <buffer> <leader>r <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> <buffer> <leader>i <cmd>lua vim.lsp.buf.implementation()<CR> 
+nnoremap <silent> <leader>g <Cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> <leader>G <Cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> <leader>r <cmd>Telescope lsp_references initial_mode=normal<CR>
+"nnoremap <silent> <leader>i <cmd>Telescope lsp_implementations initial_mode=normal<CR> 
 
 " Error mappings
-nnoremap <silent> <buffer> <leader>eh <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-nnoremap <silent> <buffer> <leader>el <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
-nnoremap <silent> <buffer> <leader>e  <cmd>lua vim.diagnostic.open_float(0, {scope="cursor"})<CR>
-nnoremap <silent> <buffer> <leader>E  <cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>
-nnoremap <silent> <buffer> <leader>ea <cmd>lua vim.lsp.diagnostic.set_loclist()<CR>
+nnoremap <silent> <leader>eh <cmd>lua vim.diagnostic.goto_prev()<CR>
+nnoremap <silent> <leader>el <cmd>lua vim.diagnostic.goto_next()<CR>
+nnoremap <silent> <leader>ee  <cmd>lua vim.diagnostic.open_float(0, {scope="cursor"})<CR>
+nnoremap <silent> <leader>E  <cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>
+nnoremap <silent> <leader>e <cmd>Telescope diagnostics severity_limit=1 initial_mode=normal<CR>
 
 " Misc mappings
-nnoremap <silent> <buffer> <leader><C-r> <cmd>lua vim.lsp.buf.rename()<CR>
-nnoremap <silent> <buffer> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
+nnoremap <silent> <leader>R <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <silent> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
+nnoremap <silent> <leader>i <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> <leader>C <cmd>lua require'rust-tools'.open_cargo_toml.open_cargo_toml()<CR>
 
 " Error highlighting
 call Base16hi("ErrorSignHL", "", "", g:base16_cterm08, g:base16_cterm01, "")
@@ -709,57 +666,125 @@ call Base16hi("DiagnosticVirtualTextHint", "", "", g:base16_cterm0A, "", "" )
 
 " LSP configuration
 lua << END
+local cmp = require'cmp'
 local lspconfig = require('lspconfig')
+
+local servers = { "rust_analyzer" }
+cmp.setup({
+  snippet = {
+    -- REQUIRED by nvim-cmp. get rid of it once we can
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
+  },
+  mapping = cmp.mapping.preset.insert({
+      ['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+      ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.close(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+  }),
+  sources = cmp.config.sources({
+    -- TODO: currently snippets from lsp end up getting prioritized -- stop that!
+    { name = 'nvim_lsp' },
+  }, {
+    { name = 'path' },
+  }),
+  experimental = {
+    ghost_text = true,
+  },
+})
+
+
+--- Inlayed hints ---
+require("rust-tools").setup({
+  server = {
+    on_attach = function(_, bufnr)
+      -- Hover actions
+      vim.keymap.set("n", "<space>p", rt.hover_actions.hover_actions, { buffer = bufnr })
+    end,
+  },
+  tools = {
+    on_initialized = function()
+      ih.set_all()
+    end,
+    inlay_hints = {
+      -- automatically set inlay hints (type hints)
+      auto = true,
+
+      -- whether to show parameter hints with the inlay hints or not
+      show_parameter_hints = false,
+
+      -- prefix for all the other hints (type, chaining)
+      other_hints_prefix = " >> ",
+
+      -- whether to align to the length of the longest line in the file
+      max_len_align = true,
+
+      -- padding from the left if max_len_align is true
+      max_len_align_padding = 1,
+    },
+  },
+
+
+})
+
+-- Enable completing paths in :
+cmp.setup.cmdline(':', {
+  sources = cmp.config.sources({
+    { name = 'path' }
+  })
+})
+
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
+  --Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
   -- Mappings.
   local opts = { noremap=true, silent=true }
 
-  -- Forward to other plugins
-  require'completion'.on_attach(client)
-end
+	buf_set_keymap('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action({apply=true})<CR>', opts)
 
-local servers = { "rust_analyzer" }
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
-    }
-  }
-end
-  -- Setup nvim-cmp.
-  -- Setup lspconfig.
-  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-  require('lspconfig')["rust_analyzer"].setup {
-    capabilities = capabilities
-  }
-  local cmp = require'cmp'
-
-  cmp.setup({
-    snippet = {
-      expand = function(args)
-        vim.fn["UltiSnips#Anon"](args.body)
-      end,
+  -- Get signatures (and _only_ signatures) when in argument lists.
+  require "lsp_signature".on_attach({
+    doc_lines = 0,
+    handler_opts = {
+      border = "none"
     },
-    mapping = {
-        ['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-        ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.close(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    },
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-      { name = 'ultisnips' },
-    }, {
-      { name = 'buffer' },
-    })
   })
+end
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+lspconfig.rust_analyzer.setup {
+  on_attach = on_attach,
+  flags = {
+    debounce_text_changes = 150,
+  },
+  settings = {
+    ["rust-analyzer"] = {
+      cargo = {
+        allFeatures = true,
+      },
+      inlayHints = {
+      	chainingHints = {
+      	  enable = true,
+				}
+			},
+      completion = {
+	      postfix = {
+	        enable = false,
+	      },
+      },
+    },
+  },
+  capabilities = capabilities,
+}
+
 require"fidget".setup{
 {
   text = {
@@ -796,6 +821,18 @@ require"fidget".setup{
   },
 }
 }
+
+require("telescope").setup {
+  extensions = {
+    file_browser = {
+      -- disables netrw and use telescope-file-browser in its place
+      hijack_netrw = true,
+    },
+  },
+}
+-- To get telescope-file-browser loaded and working with telescope,
+-- you need to call load_extension, somewhere after setup function:
+require("telescope").load_extension "file_browser"
 END
 
 autocmd FileType lua lua require'cmp'.setup.buffer {
