@@ -8,7 +8,7 @@
 "  the scenes or prompt me.  If I have to remember a new set of commands or
 "  keystrokes, the likelihood that I will use that feature are deduced
 "  greatly.
-"  
+"
 "  Most shortcuts that I add use the '<leader>'.  Things that I use with great
 "  frequence are shortcut this way (formatting, running specific tests,
 "  switching between open files, etc).
@@ -26,6 +26,11 @@ set history=100
 " Enable filetype plugins
 filetype plugin indent on
 
+set number
+set relativenumber
+
+set title
+
 " Set to auto read when a file is changed from the outside
 set autoread
 au FocusGained,BufEnter * checktime
@@ -37,6 +42,10 @@ let mapleader = " "
 " Fast saving
 nmap <leader>w :w!<cr>
 
+" Visual mode with mouse
+set mouse=a
+set mousemodel=extend
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -44,7 +53,7 @@ nmap <leader>w :w!<cr>
 set so=3
 
 " Avoid garbled characters in Chinese language windows OS
-let $LANG='en' 
+let $LANG='en'
 set langmenu=en
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
@@ -76,23 +85,24 @@ set whichwrap+=<,>,h,l
 " Ignore case when searching
 set ignorecase
 
-" When searching try to be smart about cases 
+" When searching try to be smart about cases
 set smartcase
 
 " Highlight search results
 set hlsearch
 
 " Makes search act like search in modern browsers
-set incsearch 
+set incsearch
 
 " Don't redraw while executing macros (good performance config)
-set lazyredraw 
+set lazyredraw
 
 " For regular expressions turn magic on
 set magic
 
 " Show matching brackets when text indicator is over them
-set showmatch 
+set showmatch
+
 " How many tenths of a second to blink when matching brackets
 set mat=2
 
@@ -109,7 +119,7 @@ set foldcolumn=1
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable syntax highlighting
-syntax enable 
+syntax enable
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -176,13 +186,12 @@ map <leader>b :Bclose<cr>:tabclose<cr>gT
 " Close all the buffers
 map <leader>B :bufdo bd<cr>
 
-
 " <leader><leader> toggles between buffers
 nnoremap <leader><leader> <c-^>
 map <leader>l :bnext<cr>
 map <leader>h :bprevious<cr>
 
-" Specify the behavior when switching between buffers 
+" Specify the behavior when switching between buffers
 try
   set switchbuf=useopen,usetab,newtab
   set stal=2
@@ -216,7 +225,7 @@ fun! CleanExtraSpaces()
 endfun
 
 if has("autocmd")
-    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+    autocmd BufWritePre * :call CleanExtraSpaces()
 endif
 
 " Quick paste from clipboard
@@ -256,6 +265,9 @@ map <leader>m t_
 " I can type :help on my own, thanks.
 map <F1> <Esc>
 imap <F1> <Esc>
+
+" Change the working directory when a file is opened
+set autochdir
 
 " Prevent accidental writes to buffers that shouldn't be edited
 autocmd BufRead *.orig set readonly
@@ -313,7 +325,7 @@ endfunction
 
 function! CmdLine(str)
     call feedkeys(":" . a:str)
-endfunction 
+endfunction
 
 function! VisualSelection(direction, extra_filter) range
     let l:saved_reg = @"
@@ -334,7 +346,7 @@ endfunction
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Turn persistent undo on 
+" => Turn persistent undo on
 "    means that you can undo even when you close a buffer/VIM
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 try
@@ -347,11 +359,11 @@ endtry
 """"""""""""""""""""""""""""""
 " => Shell section
 """"""""""""""""""""""""""""""
-if exists('$TMUX') 
+if exists('$TMUX')
     if has('nvim')
         set termguicolors
     else
-        set term=screen-256color 
+        set term=screen-256color
     endif
 endif
 
@@ -367,21 +379,17 @@ au BufNewFile,BufRead *.mako set ft=mako
 
 au FileType python map <buffer> F :set foldmethod=indent<cr>
 
-au FileType python inoremap <buffer> $r return 
-au FileType python inoremap <buffer> $i import 
-au FileType python inoremap <buffer> $p print 
+au FileType python inoremap <buffer> $r return
+au FileType python inoremap <buffer> $i import
+au FileType python inoremap <buffer> $p print
 au FileType python inoremap <buffer> $f # --- <esc>a
-au FileType python map <buffer> <leader>1 /class 
-au FileType python map <buffer> <leader>2 /def 
-au FileType python map <buffer> <leader>C ?class 
-au FileType python map <buffer> <leader>D ?def 
+au FileType python map <buffer> <leader>1 /class
+au FileType python map <buffer> <leader>2 /def
+au FileType python map <buffer> <leader>C ?class
+au FileType python map <buffer> <leader>D ?def
 
 
 """ The below is from other sources
-set number
-set relativenumber
-
-set title
 
 " Search results centered please
 nnoremap <silent> n nzz
@@ -395,6 +403,10 @@ nnoremap ? ?\v
 nnoremap / /\v
 cnoremap %s/ %sm/
 
+" Make "this word" searches very magic too for easy re-lookups
+nnoremap * /\v<<C-R>=expand('<cword>')<CR>><CR>
+nnoremap # ?\v<<C-R>=expand('<cword>')<CR>><CR>
+
 " Stops the deletion of auto-indents if the auto-indented line is left blank
 " set cindent
 set tabstop=2
@@ -404,7 +416,13 @@ set shiftround
 set cpoptions+=I
 
 " Folding functions
-set foldmethod=manual
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+set nofoldenable " Don't auto-fold on start up
+nnoremap <silent> <leader>u zc
+nnoremap <silent> <leader>U zC
+nnoremap <silent> <leader>o zO
+nnoremap <silent> <leader>O zo
 
 " Visual Mode mappings
 " Normally, pasting something while in visual mode will replace what is in
@@ -419,7 +437,7 @@ xnoremap <expr> P '"_d"'.v:register.'P'
 inoremap # X#
 " Normally, pressing enter on an empty line will remove the auto-indention.
 " This stops that.
-inoremap <cr> <space><bs><cr>
+" inoremap <cr> <space><bs><cr>
 
 " Intuitive remaps for j, k on line that wrap around
 nnoremap j gj
@@ -441,8 +459,10 @@ noremap   <Left>   <NOP>
 noremap   <Right>  <NOP>
 
 " Jump to start and end of line using the home row keys
-map H ^
-map L $
+nmap H ^
+nmap L $
+vmap H ^
+vmap L $
 
 " Ctrl+j and Ctrl+k as Esc
 " Ctrl-j is a little awkward unfortunately:
@@ -477,97 +497,65 @@ augroup AutoSaveFolds
   au BufWinEnter .* silent loadview
 augroup END
 
-call plug#begin("~/.vim/plugged")
-
-" pre config scripts
-Plug '~/.vim/rc/pre'
-
-" the official vim-plug repo
-Plug 'junegunn/vim-plug'
-Plug 'machakann/vim-highlightedyank'
+call plug#begin("~/.config/nvim/plugged")
 
 " Load plugins
 Plug 'ciaranm/securemodelines'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'justinmk/vim-sneak'
+Plug 'machakann/vim-highlightedyank'
+Plug 'wakatime/vim-wakatime'
+Plug 'nvim-treesitter/nvim-treesitter'
 
 " Themes
 Plug 'chriskempson/base16-vim'
 
 " GUI enhancements
-"Plug 'itchyny/lightline.vim'
 Plug 'andymass/vim-matchup'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'majutsushi/tagbar'
 
 " NERDTree
-Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
-Plug 'Xuyuanp/nerdtree-git-plugin'
 
-" Fuzzy finder
-
-" quickly wrap text in quotes, parenthesis, etc.
-Plug 'tpope/vim-surround'
-
-" compile and run code from vim
-Plug 'skywind3000/asyncrun.vim'
-Plug 'skywind3000/asynctasks.vim'
+" Telescope
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope-file-browser.nvim'
 
 " highlight the current match in a different color
 Plug 'airblade/vim-current-search-match'
 
-" regex devel for python, java, ruby regexs
-Plug 'ervandew/regex'
-" align code
-Plug 'junegunn/vim-easy-align'
-" Code  formatting
+" Autoformatter and tester
 Plug 'Chiel92/vim-autoformat'
-
-" writing utils
-Plug 'reedes/vim-wordy'
-Plug 'reedes/vim-lexical'
-Plug 'rhysd/vim-grammarous'
-
-" Snippets
-Plug 'SirVer/ultisnips', {'branch':'master'}
-Plug 'quangnguyen30192/cmp-nvim-ultisnips', {'branch':'main'}
 
 " General Langauge Support
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/lsp_extensions.nvim' " Minor Rust analyzer support (inlayed hints)
+Plug 'simrat39/inlay-hints.nvim' " Minor Rust analyzer support (inlayed hints)
+Plug 'simrat39/rust-tools.nvim'
 Plug 'nvim-lua/completion-nvim'
 Plug 'hrsh7th/cmp-nvim-lsp', {'branch':'main'}
 Plug 'hrsh7th/cmp-buffer', {'branch':'main'}
 Plug 'hrsh7th/nvim-cmp', {'branch':'main'}
 Plug 'ray-x/lsp_signature.nvim'
-Plug 'w0rp/ale'
-Plug 'j-hui/fidget.nvim'
-"Plug 'ncm2/ncm2'
-"Plug 'roxma/nvim-yarp'
-"Plug 'ncm2/ncm2-bufword'
-"Plug 'ncm2/ncm2-path'
-"Plug 'sheerun/vim-polyglot'
-"Plug 'Shougo/echodoc.vim'
-"Plug 'vim-syntastic/syntastic'
-"Plug 'neoclide/coc.nvim', {'branch':'release'}
-"Plug 'glepnir/lspsaga.nvim'
+Plug 'j-hui/fidget.nvim', {'branch':'main'}
+
+" Snippets
+Plug 'hrsh7th/cmp-vsnip', {'branch': 'main'}
+Plug 'hrsh7th/vim-vsnip'
 
 " Specific Langauge Support
-Plug 'plasticboy/vim-markdown'
 Plug 'hdima/python-syntax'
 Plug 'lervag/vimtex'
 Plug 'cespare/vim-toml', {'branch':'main'}
 Plug 'stephpy/vim-yaml'
-Plug 'rust-lang/rls'
 Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'dag/vim-fish'
 Plug 'godlygeek/tabular'
 
-" post config scripts
-Plug '~/.vim/rc/post'
+" Pop-out terminal
+Plug 'akinsho/toggleterm.nvim'
 
 call plug#end()
 
@@ -587,12 +575,8 @@ let g:completion_trigger_keyword_length = 2 " default = 1
 
 " Completion
 set completeopt=menu,menuone
-inoremap <expr><TAB>   pumvisible() ? "\<C-n>" : "\<Tab>" 
+inoremap <expr><TAB>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" Enable type inlay hints
-autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = "  >> ", aligned = true }
-noremap <leader>E :lua vim.lsp.diagnostic.show_line_diagnostics{focus=false}<CR>
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -605,26 +589,7 @@ let g:formatdef_rustfmt = '"rustfmt"'
 let g:formatters_rust = ['rustfmt']
 
 noremap <leader>f :Autoformat<CR>
-noremap <leader>t :RustTest<CR>
-
-" !!!-------------------- UltiSnips Config --------------------!!!
-let g:UltiSnipsExpandTrigger="<c-tab>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-
-" !!!-------------------- NERDTree Config --------------------!!!
-" Ctrl-n opens/closes nerd tree
-map <C-n> :NERDTreeToggle<CR>
-let g:NERDTreeWinPos = "right"
-let NERDTreeShowHidden=0
-let NERDTreeIgnore = ['\.pyc$', '__pycache__']
-let g:NERDTreeWinSize=35
-
-" Exit Vim if NERDTree is the only window left.
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
-    \ quit | endif
+noremap <leader>T :RustTest<CR>
 
 " !!!------------------ NERD Commenter Config -------------------!!!
 " Add spaces after comment delimiters by default
@@ -650,119 +615,220 @@ let g:NERDToggleCheckAllLines = 1
 
 set signcolumn=yes
 
+" !!!------------------ Telescope Config -------------------!!!
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope file_browser initial_mode=normal<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep initial_mode=insert<cr>
+nnoremap <leader>fb <cmd>Telescope buffers initial_mode=normal<cr>
+nnoremap <silent> <leader>t <cmd>Telescope lsp_document_symbols initial_mode=normal<CR>
+
 " !!!------------------ Color Scheme Config -------------------!!!
 set background=dark
 let base16colorspace=256
 colorscheme base16-gruvbox-dark-hard
 hi Comment ctermfg=30 guifg=#64CBC8
-hi Normal guibg=NONE ctermbg=NONE
+hi Normal ctermbg=NONE guibg=NONE
+
 " Brighter comments
 call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
 
-" !!!------------------ Tagbar Config ----------------------------!!!
-nmap <F8> :TagbarToggle<CR>
-let g:tagbar_ctags_bin="~/.config/nvim/tags/ctags-5.8/ctags"
-
-" !!!------------------ Ale Config ----------------------------!!!
-nnoremap <leader>G :ALEGoToDefinition<CR>
-
-let g:ale_linters = {
-\  'rust': ['analyzer'],
-\}
-
-" Correct
-" highlight ALEWarning cterm=underline ctermbg=DarkMagenta
-
-highlight clear ALEWarning
-highlight clear ALEError
-highlight clear ALEErrorSign
-
-highlight ALEWarning cterm=underline
-highlight ALEError cterm=underline
-
-"function! g:Base16hi(group, guifg, guibg, ctermfg, ctermbg, ...)
-call Base16hi("ALEWarning", "", "", "", g:base16_cterm02, "" )
-call Base16hi("ALEError", "", "", "", g:base16_cterm02, "" )
-call Base16hi("ALEErrorSign", "", "", g:base16_cterm08, g:base16_cterm01, "" )
-
-let g:ale_sign_error = '**'
-let g:ale_sign_warning = '++'
-
-let g:ale_fixers = { 'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lines'] }
-
-nmap <silent> <leader>e <Plug>(ale_next_wrap)
+" Highlight currently argument
+call Base16hi("LspSignatureActiveParameter", g:base16_gui05, g:base16_gui03, g:base16_cterm05, g:base16_cterm03, "bold", "")
 
 " !!!------------------ LSP Config ----------------------------!!!
 
-" LSP configuration
+" Goto mappings
+nnoremap <silent> <leader>g <Cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> <leader>G <Cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> <leader>r <cmd>Telescope lsp_references initial_mode=normal<CR>
+"nnoremap <silent> <leader>i <cmd>Telescope lsp_implementations initial_mode=normal<CR>
+
+" Error mappings
+nnoremap <silent> <leader>eh <cmd>lua vim.diagnostic.goto_prev()<CR>
+nnoremap <silent> <leader>el <cmd>lua vim.diagnostic.goto_next()<CR>
+nnoremap <silent> <leader>ee  <cmd>lua vim.diagnostic.open_float(0, {scope="cursor"})<CR>
+nnoremap <silent> <leader>E  <cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>
+nnoremap <silent> <leader>e <cmd>Telescope diagnostics severity_limit=1 initial_mode=normal<CR>
+
+" Misc mappings
+nnoremap <silent> <leader>R <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <silent> <leader>f <cmd>lua vim.lsp.buf.format( { async = true } )<CR>
+nnoremap <silent> <leader>i <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> <leader>C <cmd>lua require'rust-tools'.open_cargo_toml.open_cargo_toml()<CR>
+nnoremap <silent> <leader>c <cmd>cd ..<CR>
+" I would like to be able to change the working directory to src/
+" nnoremap <silent> <leader><C-c> <cmd>cd ..<CR>
+
+" Error highlighting
+call Base16hi("ErrorSignHL", "", "", g:base16_cterm08, g:base16_cterm01, "")
+call Base16hi("WarnSignHL", "", "", g:base16_cterm0A, g:base16_cterm01, "")
+call Base16hi("HintSignHL", "", "", g:base16_cterm0B, g:base16_cterm01, "")
+
+sign define DiagnosticSignError text=** texthl=ErrorSignHL
+sign define DiagnosticSignWarn text=++ texthl=WarnSignHl
+sign define DiagnosticSignHint text=>> texthl=HintSignHl
+
+highlight clear DiagnosticError
+highlight clear DiagnosticVirtualTextWarn
+highlight clear DiagnosticWarn
+highlight clear DiagnosticVirtualTextError
+
+""function! g:Base16hi(group, guifg, guibg, ctermfg, ctermbg, ...)
+highlight DiagnosticError cterm=underline
+call Base16hi("DiagnosticError", "", "", g:base16_cterm08, "", "" )
+call Base16hi("DiagnosticWarn", "", "", g:base16_cterm0A, "", "" )
+call Base16hi("DiagnosticHint", "", "", g:base16_cterm0B, "", "" )
+call Base16hi("DiagnosticVirtualTextError", "", "", g:base16_cterm08, "", "" )
+call Base16hi("DiagnosticVirtualTextWarning", "", "", g:base16_cterm0A, "", "" )
+call Base16hi("DiagnosticVirtualTextHint", "", "", g:base16_cterm0A, "", "" )
+
+"
+
+" LSP configuration & Config for toggleterm
+nnoremap <silent> <leader>t <cmd>ToggleTerm<CR>
+
 lua << END
+local cmp = require'cmp'
 local lspconfig = require('lspconfig')
+local toggleterm = require'toggleterm'
+
+toggleterm.setup({
+	  size = 20,
+	  open_mapping = [[<a-t>]],
+	  hide_numbers = true,
+	  shade_terminals = true,
+	  shading_factor = 2,
+	  start_in_insert = true,
+	  insert_mappings = true,
+	  persist_size = true,
+	  direction = "float",
+	  close_on_exit = true,
+	  shell = vim.o.shell,
+	  float_opts = {
+      width = 130,
+	  	border = "single",
+  	},
+})
+
+
+local servers = { "rust_analyzer" }
+cmp.setup({
+  snippet = {
+    -- REQUIRED by nvim-cmp. get rid of it once we can
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
+  },
+  mapping = cmp.mapping.preset.insert({
+      ['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+      ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.close(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+  }),
+  sources = cmp.config.sources({
+    -- TODO: currently snippets from lsp end up getting prioritized -- stop that!
+    { name = 'nvim_lsp' },
+  }, {
+    { name = 'path' },
+  }),
+  experimental = {
+    ghost_text = true,
+  },
+})
+
+
+--- Inlayed hints ---
+require("rust-tools").setup({
+  server = {
+    on_attach = function(_, bufnr)
+      -- Hover actions
+      vim.keymap.set("n", "<space>p", rt.hover_actions.hover_actions, { buffer = bufnr })
+    end,
+  },
+  tools = {
+    on_initialized = function()
+      ih.set_all()
+    end,
+    inlay_hints = {
+      -- automatically set inlay hints (type hints)
+      auto = true,
+
+      -- whether to show parameter hints with the inlay hints or not
+      show_parameter_hints = false,
+
+      -- prefix for all the other hints (type, chaining)
+      other_hints_prefix = " >> ",
+
+      -- whether to align to the length of the longest line in the file
+      max_len_align = true,
+
+      -- padding from the left if max_len_align is true
+      max_len_align_padding = 1,
+    },
+  },
+
+
+})
+
+-- Enable completing paths in :
+cmp.setup.cmdline(':', {
+  sources = cmp.config.sources({
+    { name = 'path' }
+  })
+})
+
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
+  --Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
   -- Mappings.
   local opts = { noremap=true, silent=true }
 
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+	buf_set_keymap('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action({apply=true})<CR>', opts)
 
-  -- Forward to other plugins
-  require'completion'.on_attach(client)
-end
-
-local servers = { "rust_analyzer" }
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
-    }
-  }
-end
-  -- Setup nvim-cmp.
-  -- Setup lspconfig.
-  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-  require('lspconfig')["rust_analyzer"].setup {
-    capabilities = capabilities
-  }
-  local cmp = require'cmp'
-
-  cmp.setup({
-    snippet = {
-      expand = function(args)
-        vim.fn["UltiSnips#Anon"](args.body)
-      end,
+  -- Get signatures (and _only_ signatures) when in argument lists.
+  require "lsp_signature".on_attach({
+    doc_lines = 0,
+    handler_opts = {
+      border = "none"
     },
-    mapping = {
-        ['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-        ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.close(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    },
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-      { name = 'ultisnips' },
-    }, {
-      { name = 'buffer' },
-    })
   })
+end
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+lspconfig.rust_analyzer.setup {
+  on_attach = on_attach,
+  flags = {
+    debounce_text_changes = 150,
+  },
+  settings = {
+    ["rust-analyzer"] = {
+      checkOnSave = {
+      	command = "clippy"
+			},
+      cargo = {
+        allFeatures = true,
+      },
+      inlayHints = {
+      	chainingHints = {
+      	  enable = true,
+				}
+			},
+      completion = {
+	      postfix = {
+	        enable = false,
+	      },
+      },
+    },
+  },
+  capabilities = capabilities,
+}
 
 require"fidget".setup{
 {
@@ -773,8 +839,8 @@ require"fidget".setup{
     completed = "Completed",  -- message shown when task completes
   },
   align = {
-    bottom = false,
-    right = true,
+    bottom = false,            -- align fidgets along bottom edge of buffer
+    right = true,             -- align fidgets along right edge of buffer
   },
   timer = {
     spinner_rate = 125,       -- frame rate of spinner animation, in ms
@@ -783,6 +849,7 @@ require"fidget".setup{
   },
   fmt = {
     leftpad = true,           -- right-justify text in fidget box
+    stack_upwards = true,     -- list of tasks grows upwards
     fidget =                  -- function to format fidget title
       function(fidget_name, spinner)
         return string.format("%s %s", spinner, fidget_name)
@@ -799,6 +866,18 @@ require"fidget".setup{
   },
 }
 }
+
+require("telescope").setup {
+  extensions = {
+    file_browser = {
+      -- disables netrw and use telescope-file-browser in its place
+      hijack_netrw = true,
+    },
+  },
+}
+-- To get telescope-file-browser loaded and working with telescope,
+-- you need to call load_extension, somewhere after setup function:
+require("telescope").load_extension "file_browser"
 END
 
 autocmd FileType lua lua require'cmp'.setup.buffer {

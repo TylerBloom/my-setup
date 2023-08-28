@@ -1,0 +1,43 @@
+[user]
+	name = TylerBloom
+	email = tylerbloom2222@gmail.com
+	signingkey = BB9054552AA556AC
+[ui "color"]
+	ui = always
+[color]
+	ui = true
+[core]
+	autocrlf = input
+	safecrlf = true
+  editor = nvim
+  pager = bat
+[merge]
+	tool = nvim -d
+[alias]
+	a = add .
+	s = status
+	c = commit
+	cp = cherry-pick
+	cpc = cherry-pick --continue
+	# https://stackoverflow.com/a/11688523/472927
+	ss = "!f() { git stash show stash^{/$*} -p; }; f"
+	sa = "!f() { git stash apply stash^{/$*}; }; f"
+[pull]
+  rebase = true
+[push]
+	default = simple
+[help]
+	autocorrect = 1
+[github]
+	user = TylerBloom
+[diff]
+	algorithm = patience
+	compactionHeuristic = true
+[protocol]
+	version = 2
+[diff "odf"]
+	textconv = odt2txt
+[gpg]
+	program = gpg
+[commit]
+	gpgsign = true

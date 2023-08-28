@@ -1,0 +1,44 @@
+[global]
+    font = "Noto Sans Mono 10"
+    format = "<b>%s</b>\n%b"
+    sort = yes
+    indicate_hidden = yes
+    alignment = center
+    show_age_threshold = 60
+    word_wrap = yes
+    ignore_newline = no
+    origin = top-right
+    offset = 5x18
+    width = (200, 300)
+    height = 120
+    transparency = 0
+    idle_threshold = 120
+    monitor = 0
+    follow = mouse
+    sticky_history = yes
+    line_height = 0
+    separator_height = 2
+    padding = 8
+    horizontal_padding = 8
+    separator_color = "#585858"
+    close = ctrl+space
+    close_all = ctrl+shift+space
+    history = ctrl+grave
+    context = ctrl+shift+period
+    frame_color = "#665c54"
+    background = "#282828"
+
+[base16_low]
+    msg_urgency = low
+    foreground = "#83a598"
+    timeout = 5
+
+[base16_normal]
+    msg_urgency = normal
+    foreground = "#b8bb26"
+    timeout = 10
+
+[base16_critical]
+    msg_urgency = critical
+    foreground = "#fb4934"
+    timeout = 0

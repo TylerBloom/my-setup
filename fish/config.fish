@@ -1,6 +1,6 @@
 abbr -a yr 'cal -y'
 abbr -a vim 'nvim'
-abbr -a adg ". ~/.local/bin/adg.fish"
+abbr -a adg ". ~/.config/adg/adg.fish"
 abbr -a vimdiff 'nvim -d'
 complete --command aurman --wraps pacman
 
@@ -180,7 +180,7 @@ function fish_greeting
 	echo -e " \\e[1mDisk usage:\\e[0m"
 	echo
 	echo -ne (\
-		df -l -h | grep -E 'dev/(xvda|sd|mapper)' | \
+		df -l -h | grep -E 'dev/(nvme1|mapper/data-root)' | \
 		awk '{printf "\\\\t%s\\\\t%4s / %4s  %s\\\\n\n", $6, $3, $2, $5}' | \
 		sed -e 's/^\(.*\([8][5-9]\|[9][0-9]\)%.*\)$/\\\\e[0;31m\1\\\\e[0m/' -e 's/^\(.*\([7][5-9]\|[8][0-4]\)%.*\)$/\\\\e[0;33m\1\\\\e[0m/' | \
 		paste -sd ''\
