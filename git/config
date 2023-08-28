@@ -1,6 +1,7 @@
 [user]
-	name = Tyler Bloom
+	name = TylerBloom
 	email = tylerbloom2222@gmail.com
+	signingkey = BB9054552AA556AC
 [ui "color"]
 	ui = always
 [color]
@@ -9,20 +10,18 @@
 	autocrlf = input
 	safecrlf = true
   editor = nvim
+  pager = bat
 [merge]
 	tool = nvim -d
 [alias]
-	c = commit
+	a = add .
 	s = status
-	st = status
-	lg = log --oneline
-	last = log -1 HEAD
-	cl = log -p -- ':(exclude)Cargo.lock'
-	f = push --force-with-lease
+	c = commit
+	cp = cherry-pick
+	cpc = cherry-pick --continue
 	# https://stackoverflow.com/a/11688523/472927
 	ss = "!f() { git stash show stash^{/$*} -p; }; f"
 	sa = "!f() { git stash apply stash^{/$*}; }; f"
-	sl = stash list
 [pull]
   rebase = true
 [push]
@@ -38,3 +37,7 @@
 	version = 2
 [diff "odf"]
 	textconv = odt2txt
+[gpg]
+	program = gpg
+[commit]
+	gpgsign = true

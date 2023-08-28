@@ -146,3 +146,4 @@ export PATH="/home/tylerbloom/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+. "$HOME/.cargo/env"
