@@ -7,7 +7,7 @@ secondary = #e60053
 alert = #bd2c40
 
 [bar/primary]
-monitor = ${env:MONITORS[0]:eDP-1}
+# monitor = ${env:MONITORS[0]:eDP-1}
 width = 100%
 height = 2.5%
 radius = 6.0
@@ -29,7 +29,7 @@ font-3 = "Noto Sans Symbols2:size=10;1"
 
 modules-left = date wireless-network memory
 modules-center = i3
-modules-right = cpu battery
+modules-right = pulseaudio cpu battery
 
 tray-position = right
 tray-padding = 2
@@ -74,11 +74,8 @@ bar-used-empty-foreground = #444444
 type = internal/date
 interval = 1
 
-date = "%a %d"
-date-alt = %a %b %d
-
-time = %I:%M
-time-alt = %I:%M%p
+date = %a %b %d
+time = %H:%M%
 
 format-prefix =
 format-prefix-foreground = ${colors.foreground}
@@ -98,13 +95,6 @@ strip-wsnumbers = true
 index-sort = true
 
 fuzzy-match = true
-
-ws-icon-0 = 1;♚
-ws-icon-1 = 2;♛
-ws-icon-2 = 3;♜
-ws-icon-3 = 4;♝
-ws-icon-4 = 5;♞
-ws-icon-default = ♟
 
 label-dimmed-underline = ${root.background}
 
@@ -135,31 +125,43 @@ label-separator = |
 label-separator-padding = 0
 label-separator-foreground = #fabd2f
 
+[module/pulseaudio]
+type = internal/pulseaudio
+
+interval = 1.0
+
+format-volume = <ramp-volume> <label-volume>
+format-volume-underline = #83a598
+label-volume = %percentage%%
+
+format-muted = <label-muted>
+format-muted-underline = #83a598
+label-muted = 🔇 muted
+
+ramp-volume-0 = 🔈
+ramp-volume-1 = 🔉
+ramp-volume-2 = 🔊
+
+click-right = pavucontrol
+
 [module/wireless-network]
 type = internal/network
 interface = wlp0s20f3
 interval = 1.0
 ping-interval = 10
 
-format-connected = <ramp-signal> <label-connected>
-label-connected =⬆️ %upspeed%  ⬇️ %downspeed%
+format-connected = <label-connected>
+label-connected = ⬆️ %upspeed:3% ⬇️ %downspeed:3%
 label-connected-underline = #fe8019
-label-disconnected =    not connected
+label-disconnected = not connected
 label-disconnected-foreground = #66
 label-disconnected-underline = #fb4934
-
-ramp-signal-0 = 
-ramp-signal-1 = 
-ramp-signal-2 = 
-ramp-signal-3 = 
-ramp-signal-4 = 
-
 
 [module/cpu]
 type = internal/cpu
 interval = 0.2
 format-prefix-foreground = ${colors.foreground}
-format-underline = #f90000
+format-underline = #fe8019
 format = <label> <ramp-coreload>
 label = CPU
 ramp-coreload-0 = ▁
@@ -200,19 +202,27 @@ exec = python3   /home/tyler/.config/polybar/spotify.py  -f '{play_pause} {song}
 type = internal/battery
 full-at = 98
 
-format-charging = <animation-charging> <label-charging>
-format-discharging = <ramp-capacity> <label-discharging>
-format-full = <ramp-capacity> <label-full>
+format-full = <label-full> <ramp-capacity>
+format-full-underline = #8ec07c
 
+format-charging = <animation-charging> <label-charging>
+format-charging-underline = #8ec07c
 label-charging = %percentage%% %time%h
+
+format-discharging = <ramp-capacity> <label-discharging>
+format-discharging-underline = #8ec07c
 label-discharging = %percentage%% %time%h
-ramp-capacity-0 = 
-ramp-capacity-0-foreground = #f53c3c
-ramp-capacity-1 = 
-ramp-capacity-1-foreground = #ffa900
-ramp-capacity-2 = 
-ramp-capacity-3 = 
-ramp-capacity-4 = 
+
+ramp-capacity-0 = ▁
+ramp-capacity-0-foreground = #ff5555
+ramp-capacity-1 = ▃
+ramp-capacity-1-foreground = #ff5555
+ramp-capacity-2 = ▅
+ramp-capacity-2-foreground = #d65d0e
+ramp-capacity-3 = ▇
+ramp-capacity-3-foreground = #fabd2f
+ramp-capacity-4 = █
+ramp-capacity-4-foreground = #8ec07c
 
 bar-capacity-width = 10
 bar-capacity-format = %{+u}%{+o}%fill%%empty%%{-u}%{-o}
@@ -223,10 +233,14 @@ bar-capacity-empty = █
 bar-capacity-empty-font = 3
 bar-capacity-empty-foreground = #44ffffff
 
-animation-charging-0 = 
-animation-charging-1 = 
-animation-charging-2 = 
-animation-charging-3 = 
-animation-charging-4 = 
+animation-charging-0 = ▁
+animation-charging-0-foreground = #ff5555
+animation-charging-1 = ▃
+animation-charging-1-foreground = #ff5555
+animation-charging-2 = ▅
+animation-charging-2-foreground = #d65d0e
+animation-charging-3 = ▇
+animation-charging-3-foreground = #fabd2f
+animation-charging-4 = █
+animation-charging-4-foreground = #8ec07c
 animation-charging-framerate = 750
-

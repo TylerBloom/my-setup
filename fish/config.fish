@@ -2,7 +2,10 @@ abbr -a yr 'cal -y'
 abbr -a vim 'nvim'
 abbr -a adg ". ~/.config/adg/adg.fish"
 abbr -a vimdiff 'nvim -d'
+abbr -a spec 'ssh -i ~/.ssh/specter casper@specter.local'
 complete --command aurman --wraps pacman
+
+export EDITOR=nvim
 
 if status --is-interactive
 	if test -d ~/dev/others/base16/templates/fish-shell
@@ -226,34 +229,9 @@ function fish_greeting
 		echo
 	end
 
-	set_color normal
-	echo -e " \e[1mTODOs\e[0;32m"
-	echo
-	if [ $r -lt 10 ]
-		# unimportant, so show rarely
-		set_color cyan
-		# echo "  [project] <description>"
-	end
-	if [ $r -lt 25 ]
-		# back-of-my-mind, so show occasionally
-		set_color green
-		# echo "  [project] <description>"
-	end
-	if [ $r -lt 50 ]
-		# upcoming, so prompt regularly
-		set_color yellow
-		# echo "  [project] <description>"
-	end
-
-	# urgent, so prompt always
-	set_color red
-	# echo "  [project] <description>"
-
-	echo
-
 	if test -s ~/todo
 		set_color magenta
-		cat todo | sed 's/^/ /'
+		cat ~/todo | sed 's/^/ /'
 		echo
 	end
 

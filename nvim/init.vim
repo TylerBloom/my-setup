@@ -176,6 +176,9 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 vnoremap <leader>/ :nohlsearch<cr>
 nnoremap <leader>/ :nohlsearch<cr>
 
+" See whitespace
+nnoremap <leader>, :set invlist<cr>
+
 " Move by line
 nnoremap j gj
 nnoremap k gk
@@ -628,6 +631,7 @@ let base16colorspace=256
 colorscheme base16-gruvbox-dark-hard
 hi Comment ctermfg=30 guifg=#64CBC8
 hi Normal ctermbg=NONE guibg=NONE
+hi todo ctermbg=NONE
 
 " Brighter comments
 call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
@@ -641,6 +645,7 @@ call Base16hi("LspSignatureActiveParameter", g:base16_gui05, g:base16_gui03, g:b
 nnoremap <silent> <leader>g <Cmd>lua vim.lsp.buf.declaration()<CR>
 nnoremap <silent> <leader>G <Cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> <leader>r <cmd>Telescope lsp_references initial_mode=normal<CR>
+nnoremap <silent> <leader>& <cmd>Telescope lsp_references initial_mode=normal<CR>
 "nnoremap <silent> <leader>i <cmd>Telescope lsp_implementations initial_mode=normal<CR>
 
 " Error mappings
@@ -687,6 +692,8 @@ call Base16hi("DiagnosticVirtualTextHint", "", "", g:base16_cterm0A, "", "" )
 " LSP configuration & Config for toggleterm
 nnoremap <silent> <leader>t <cmd>ToggleTerm<CR>
 
+set shell=fish
+
 lua << END
 local cmp = require'cmp'
 local lspconfig = require('lspconfig')
@@ -694,6 +701,7 @@ local toggleterm = require'toggleterm'
 
 toggleterm.setup({
 	  size = 20,
+	  shell=fish,
 	  open_mapping = [[<a-t>]],
 	  hide_numbers = true,
 	  shade_terminals = true,
@@ -813,7 +821,7 @@ lspconfig.rust_analyzer.setup {
       	command = "clippy"
 			},
       cargo = {
-        allFeatures = true,
+        allFeatures = false,
       },
       inlayHints = {
       	chainingHints = {
