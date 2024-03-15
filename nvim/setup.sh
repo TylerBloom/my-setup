@@ -7,13 +7,12 @@ then
   mkdir ${HOME}/.config/nvim
 fi
 
-cp -r ./init.vim ${HOME}/.config/nvim/
+cp ./init.lua ${HOME}/.config/nvim/
+cp ./lazy-lock.json ${HOME}/.config/nvim/
 
-cp -r ./autoload ${HOME}/.config/nvim/
-cp -r ./sessions ${HOME}/.config/nvim/
-cp -r ./scripts ${HOME}/.config/nvim/
+cp -r ./lua ${HOME}/.config/nvim/
 
 cd ${HOME}/.config/nvim
 
-echo "Make sure to use :PlugInstall when you first use nvim"
+echo "Every is setup. Lazy-nvim will take care of installing everything for you"
 
