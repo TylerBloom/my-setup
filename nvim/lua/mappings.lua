@@ -6,6 +6,10 @@ vim.api.nvim_set_keymap('', '<leader>d', '"+dd', { noremap = true })
 vim.api.nvim_set_keymap('v', '<leader>y', '"+y' , { })
 vim.api.nvim_set_keymap('v', '<leader>d', '"+d' , { })
 
+-- In other versions of nvim, cw doesn't consume whitespace. I prefer that behavior
+vim.api.nvim_set_keymap('n', 'cw', 'ce', { })
+vim.api.nvim_set_keymap('n', 'dw', 'de', { })
+
 -- nmap <leader>w :w!<cr>
 -- Ctrl+h to stop searching
 vim.api.nvim_set_keymap('v', '<leader>/', ':nohlsearch<cr>', { noremap = true })
@@ -115,9 +119,12 @@ vim.api.nvim_set_keymap('n', '<leader>O', 'zo', { noremap = true, silent = true 
 -- Visual Mode mappings
 -- Normally, pasting something while in visual mode will replace what is in
 -- that register with what is highlighted. This stops that.
-vim.api.nvim_set_keymap('x', 'p', '"_d"\'.v:register.\'P\'', { noremap = true, expr = true })
-vim.api.nvim_set_keymap('x', 'P', '"_d"\'.v:register.\'P\'', { noremap = true, expr = true })
+-- vim.api.nvim_set_keymap('x', 'p', "\"_d\"'.v:register.'P'", { noremap = true, expr = true })
+-- vim.api.nvim_set_keymap('x', 'P', "\"_d\"'.v:register.'P'", { noremap = true, expr = true })
 
+-- xnoremap <expr> p '"_d"'.v:register.'P'
+-- xnoremap <expr> P '"_d"'.v:register.'P'
+-- "_d"XP
 
 -- Insert mode mapppings
 -- Normally, adding '#' as the first char to an indented line will remove the
@@ -192,7 +199,7 @@ vim.api.nvim_set_keymap('', "<leader>T", ":RustTest<CR>", { noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>ff', '<cmd>Telescope file_browser initial_mode=normal<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>fg', '<cmd>Telescope live_grep initial_mode=insert<cr>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>fb', '<cmd>Telescope buffers initial_mode=normal<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>t', '<cmd>Telescope lsp_document_symbols initial_mode=normal<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>t', '<cmd>Telescope lsp_document_symbols initial_mode=normal<CR>', { noremap = true, silent = true })
 
 
 -- !!!------------------ LSP Config ----------------------------!!!
@@ -215,5 +222,13 @@ vim.api.nvim_set_keymap('n', '<leader>e', '<cmd>Telescope diagnostics severity_l
 vim.api.nvim_set_keymap('n', '<leader>R', '<cmd>lua vim.lsp.buf.rename()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.format( { async = true } )<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>i', '<cmd>lua vim.lsp.buf.hover()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>C', "<cmd>lua require'rust-tools'.open_cargo_toml.open_cargo_toml()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>C', "<cmd>RustLsp openCargo<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>c', '<cmd>cd ..<CR>', { noremap = true, silent = true })
+
+-- Comment out the selection
+vim.api.nvim_set_keymap('v', '<leader>>', ":s/\\(.*\\)/\\/\\/ \\1/<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<leader><', '<cmd>cd ..<CR>', { noremap = true, silent = true })
+
+
+-- LSP configuration & Config for toggleterm
+vim.api.nvim_set_keymap('n', '<leader>t', '<cmd>ToggleTerm<CR>', { noremap = true, silent = true})

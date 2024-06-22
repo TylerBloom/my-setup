@@ -20,7 +20,7 @@ vim.o.autoread = true
 -- FIXME: au FocusGained,BufEnter * checktime
 
 -- Visual mode with mouse
-vim.o.mouse = a
+vim.o.mouse = 'a'
 vim.o.mousemodel = extend
 
 vim.o.updatetime = 300
@@ -145,7 +145,7 @@ vim.o.termguicolors = true
 
 -- Stops the deletion of auto-indents if the auto-indented line is left blank
 -- set cindent
-vim.o.tabstop = 2
+vim.o.tabstop = '2'
 vim.o.autoindent = true
 vim.o.copyindent = true
 vim.o.shiftround = true
@@ -205,13 +205,15 @@ vim.cmd([[let base16colorspace = 256]])
 vim.cmd([[colorscheme base16-gruvbox-dark-hard]])
 vim.cmd([[hi Comment ctermfg=30 guifg=#64CBC8]])
 vim.cmd([[hi Normal ctermbg=NONE guibg=NONE]])
-vim.cmd([[hi todo ctermbg=NONE]])
+vim.cmd([[hi Todo guibg=NONE ctermbg=NONE]])
 
 -- Signature of Base16hi
 -- function Base16hi(group, guifg, guibg, ctermfg, ctermbg, ...)
 
+vim.cmd([[call Base16hi("LineNr", g:base16_gui04, "", g:base16_cterm04, "", "")]])
+
 -- Brighter comments
-vim.cmd([[call Base16hi("Comment", base16_gui09, "", base16_cterm09, "", "", "")]])
+vim.cmd([[call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")]])
 
 -- Highlight currently argument
 vim.cmd([[call Base16hi("LspSignatureActiveParameter", g:base16_gui05, g:base16_gui03, g:base16_cterm05, g:base16_cterm03, "bold", "")]])
@@ -238,4 +240,27 @@ vim.cmd([[call Base16hi("DiagnosticHint", "", "", g:base16_cterm0B, "", "" )]])
 vim.cmd([[call Base16hi("DiagnosticVirtualTextError", "", "", g:base16_cterm08, "", "" )]])
 vim.cmd([[call Base16hi("DiagnosticVirtualTextWarning", "", "", g:base16_cterm0A, "", "" )]])
 vim.cmd([[call Base16hi("DiagnosticVirtualTextHint", "", "", g:base16_cterm0A, "", "" )]])
+
+-- Make some corrections to the coloring the semantic coloring can cause (probably want to adjust my LSP config too..)
+-- Sourced from: https://www.reddit.com/r/neovim/comments/12gvms4/this_is_why_your_higlights_look_different_in_90/
+local links = {
+  ['@lsp.type.namespace'] = '@namespace',
+  ['@lsp.type.type'] = '@type',
+  ['@lsp.type.class'] = '@type',
+  ['@lsp.type.enum'] = '@type',
+  ['@lsp.type.interface'] = '@type',
+  ['@lsp.type.struct'] = '@structure',
+  ['@lsp.type.parameter'] = '@parameter',
+  ['@lsp.type.variable'] = '@variable',
+  ['@lsp.type.property'] = '@property',
+  ['@lsp.type.enumMember'] = '@constant',
+  ['@lsp.type.function'] = '@function',
+  ['@lsp.type.method'] = '@method',
+  ['@lsp.type.macro'] = '@macro',
+  ['@lsp.type.decorator'] = '@function',
+  ['@lsp.mod.documentation'] = '@function',
+}
+for newgroup, oldgroup in pairs(links) do
+  vim.api.nvim_set_hl(0, newgroup, { link = oldgroup, default = true })
+end
 
