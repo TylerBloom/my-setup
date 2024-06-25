@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd({"Filetype"}, {
 				vim.o.softtabstop = 4
 				vim.o.tabstop = 4
 				vim.o.expandtab = true
-				vim.o.colorcolumn=100
+				vim.o.colorcolumn = "100"
   end,
 })
 
