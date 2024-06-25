@@ -40,9 +40,7 @@ vim.g.rustaceanvim = {
   },
   -- LSP configuration
   server = {
-    on_attach = function(client, bufnr)
-      -- you can also put keymaps in here
-    end,
+    on_attach = on_attach,
     default_settings = {
       -- rust-analyzer language server configuration
       ['rust-analyzer'] = {
@@ -57,10 +55,7 @@ vim.g.rustaceanvim = {
 require("rustaceanvim")
 vim.g.rustaceanvim = {
   server = {
-    on_attach = function(client, bufnr)
-      -- Hover actions
-      vim.keymap.set("n", "<space>p", rt.hover_actions.hover_actions, { buffer = bufnr })
-    end,
+    on_attach = on_attach,
   },
   tools = {
     on_initialized = function()
@@ -69,7 +64,7 @@ vim.g.rustaceanvim = {
     end,
     inlay_hints = {
       -- automatically set inlay hints (type hints)
-      auto = true,
+      auto = false,
 
       -- whether to show parameter hints with the inlay hints or not
       show_parameter_hints = false,
@@ -103,8 +98,7 @@ local on_attach = function(client, bufnr)
 
   -- Mappings.
   local opts = { noremap=true, silent=true }
-
-	buf_set_keymap('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action({apply=true})<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>a', '<cmd>lua vim.lsp.buf.code_action({apply=true})<CR>', opts)
 
   -- Get signatures (and _only_ signatures) when in argument lists.
   require "lsp_signature".on_attach({

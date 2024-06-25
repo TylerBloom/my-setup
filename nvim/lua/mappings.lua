@@ -232,3 +232,4 @@ vim.api.nvim_set_keymap('v', '<leader><', '<cmd>cd ..<CR>', { noremap = true, si
 
 -- LSP configuration & Config for toggleterm
 vim.api.nvim_set_keymap('n', '<leader>t', '<cmd>ToggleTerm<CR>', { noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>a', '<cmd>lua vim.lsp.buf.code_action({apply=true})<CR>', { noremap = true, silent = true})

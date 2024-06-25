@@ -80,9 +80,8 @@ vim.o.showmatch = true
 vim.omat = 2
 
 -- No annoying sound on errors
-vim.o.noerrorbells = true
-vim.o.novisualbell = true
-vim.o.t_vb = ""
+vim.o.errorbells = false
+vim.o.visualbell = false
 vim.o.tm = 500
 
 -- Add a bit extra margin to the left
@@ -99,10 +98,10 @@ vim.o.ffs = unix,dos,mac
 ---                 Files, backups and undo                 ---
 ---------------------------------------------------------------
 -- Turn backup off, since most stuff is in SVN, git etc. anyway...
-vim.o.nobackup = true
-vim.o.nowritebackup = true
-vim.o.nowb = true
-vim.o.noswapfile = true
+vim.o.backup = false
+vim.o.writebackup = false
+vim.o.wb = false
+vim.o.swapfile = false
 
 
 ---------------------------------------------------------------
@@ -133,7 +132,7 @@ vim.o.stal = 2
 ---   Turn persistent undo on means that you can undo even  ---
 ---   when you close a buffer/VIM                           ---
 ---------------------------------------------------------------
-vim.o.undodir = "/home/parallels/.config/nvim/temp_dirs/undodir"
+vim.o.undodir = "/home/tylerbloom/.config/nvim/temp_dirs/undodir"
 vim.o.undofile = true
 
 
@@ -145,7 +144,7 @@ vim.o.termguicolors = true
 
 -- Stops the deletion of auto-indents if the auto-indented line is left blank
 -- set cindent
-vim.o.tabstop = '2'
+vim.o.tabstop = 2
 vim.o.autoindent = true
 vim.o.copyindent = true
 vim.o.shiftround = true
@@ -157,7 +156,7 @@ vim.o.foldmethod = "expr"
 -- FIXME: Dunno how to do this yet...
 -- vim.o.foldexpr = nvim_treesitter#foldexpr()
 -- Don't auto-fold on start up
-vim.o.nofoldenable = true
+vim.o.foldenable = false
 
 vim.syntax = on
 
@@ -241,26 +240,58 @@ vim.cmd([[call Base16hi("DiagnosticVirtualTextError", "", "", g:base16_cterm08, 
 vim.cmd([[call Base16hi("DiagnosticVirtualTextWarning", "", "", g:base16_cterm0A, "", "" )]])
 vim.cmd([[call Base16hi("DiagnosticVirtualTextHint", "", "", g:base16_cterm0A, "", "" )]])
 
+-- Set @lsp.mod.documentation to guifg=#8ec07c (base0C)
+
+function color()
+				return string.format("#%s", vim.g.base16_gui0C)
+end
+
+local prefixed_00 = "#" .. vim.g.base16_gui00
+local prefixed_01 = "#" .. vim.g.base16_gui01
+local prefixed_02 = "#" .. vim.g.base16_gui02
+local prefixed_03 = "#" .. vim.g.base16_gui03
+local prefixed_04 = "#" .. vim.g.base16_gui04
+local prefixed_05 = "#" .. vim.g.base16_gui05
+local prefixed_06 = "#" .. vim.g.base16_gui06
+local prefixed_07 = "#" .. vim.g.base16_gui07
+local prefixed_08 = "#" .. vim.g.base16_gui08
+local prefixed_09 = "#" .. vim.g.base16_gui09
+local prefixed_0A = "#" .. vim.g.base16_gui0A
+local prefixed_0B = "#" .. vim.g.base16_gui0B
+local prefixed_0C = "#" .. vim.g.base16_gui0C
+local prefixed_0D = "#" .. vim.g.base16_gui0D
+local prefixed_0E = "#" .. vim.g.base16_gui0E
+local prefixed_0F = "#" .. vim.g.base16_gui0F
+
+vim.api.nvim_set_hl(0, '@lsp.type.parameter', { fg=prefixed_06 })
+vim.api.nvim_set_hl(0, '@lsp.type.variable', { fg=prefixed_06 })
+vim.api.nvim_set_hl(0, '@lsp.type.namespace', { fg=prefixed_08 })
+vim.api.nvim_set_hl(0, '@lsp.type.property', { fg=prefixed_06 })
+vim.api.nvim_set_hl(0, '@lsp.mod.documentation', { fg=prefixed_0C })
+vim.api.nvim_set_hl(0, '@lsp.type.macro', { fg=prefixed_08 })
+
 -- Make some corrections to the coloring the semantic coloring can cause (probably want to adjust my LSP config too..)
 -- Sourced from: https://www.reddit.com/r/neovim/comments/12gvms4/this_is_why_your_higlights_look_different_in_90/
-local links = {
-  ['@lsp.type.namespace'] = '@namespace',
-  ['@lsp.type.type'] = '@type',
-  ['@lsp.type.class'] = '@type',
-  ['@lsp.type.enum'] = '@type',
-  ['@lsp.type.interface'] = '@type',
-  ['@lsp.type.struct'] = '@structure',
-  ['@lsp.type.parameter'] = '@parameter',
-  ['@lsp.type.variable'] = '@variable',
-  ['@lsp.type.property'] = '@property',
-  ['@lsp.type.enumMember'] = '@constant',
-  ['@lsp.type.function'] = '@function',
-  ['@lsp.type.method'] = '@method',
-  ['@lsp.type.macro'] = '@macro',
-  ['@lsp.type.decorator'] = '@function',
-  ['@lsp.mod.documentation'] = '@function',
-}
-for newgroup, oldgroup in pairs(links) do
-  vim.api.nvim_set_hl(0, newgroup, { link = oldgroup, default = true })
-end
+-- local links = {
+--  ['@lsp.type.namespace'] = '@namespace',
+--  ['@lsp.type.type'] = '@type',
+--  ['@lsp.type.property'] = '@method',
+--  ['@lsp.type.class'] = '@type',
+--  ['@lsp.type.enum'] = '@type',
+--  ['@lsp.type.interface'] = '@type',
+--  ['@lsp.type.struct'] = '@structure',
+--  ['@lsp.type.parameter'] = '@parameter',
+--  ['@lsp.type.variable'] = '@variable',
+--  ['@lsp.type.property'] = '@property',
+--  ['@lsp.type.enumMember'] = '@constant',
+--  ['@lsp.type.function'] = '@function',
+--  ['@lsp.type.method'] = '@method',
+--  ['@lsp.type.macro'] = '@macro',
+--  ['@lsp.type.decorator'] = '@macro',
+--  ['@lsp.mod.documentation'] = '@lsp.typemod.lifetime.declaration.rust',
+--  ['@lsp.typemod.comment.documentation.rust'] = '@function',
+--}
+--for newgroup, oldgroup in pairs(links) do
+--  vim.api.nvim_set_hl(0, newgroup, { link = oldgroup, default = true })
+--end
 
