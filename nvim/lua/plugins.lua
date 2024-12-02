@@ -52,6 +52,7 @@ return {
   { 'airblade/vim-current-search-match' },
 
 -- General Langauge Support
+  { 'jparise/vim-graphql' },
   { 'neovim/nvim-lspconfig' },
   { 'simrat39/inlay-hints.nvim' },
   { 'mrcjkb/rustaceanvim', version = "^4", ft = { "rust" } },

@@ -34,40 +34,44 @@ cmp.setup({
 
 --- Inlayed hints ---
 
+require("rustaceanvim")
 vim.g.rustaceanvim = {
-  -- Plugin configuration
-  tools = {
-  },
-  -- LSP configuration
   server = {
     on_attach = on_attach,
     default_settings = {
       -- rust-analyzer language server configuration
       ['rust-analyzer'] = {
+      	inlayHints = {
+								chainingHints = { enable = true },
+								typeHints = { enable = false },
+								parameterHints = { enable = false },
+								bindingModeHints = { enable = false },
+								closingBraceHints = { enable = false },
+								closureCaptureHints = { enable = false },
+				},
+      	check = {
+      	    workspace = false,
+				},
+      	cargo = {
+      	    allFeatures = true,
+      	    targetDir = true,
+      	    extraEnv = {
+      	    		['CARGO_TARGET_DIR'] = "/home/parallels/.cargo/ra_target"
+						}
+				},
       },
     },
   },
-  -- DAP configuration
-  dap = {
-  },
-}
-
-require("rustaceanvim")
-vim.g.rustaceanvim = {
-  server = {
-    on_attach = on_attach,
-  },
   tools = {
     on_initialized = function()
-      -- I believe this sets all inlayed hints, not 100% sure, though
-      -- ih.set_all()
+   	  vim.lsp.inlay_hint.enable(true)
     end,
     inlay_hints = {
       -- automatically set inlay hints (type hints)
       auto = false,
 
       -- whether to show parameter hints with the inlay hints or not
-      show_parameter_hints = false,
+      show_parameter_hints = true,
 
       -- prefix for all the other hints (type, chaining)
       other_hints_prefix = " >> ",
@@ -80,7 +84,6 @@ vim.g.rustaceanvim = {
     },
   },
 }
-
 
 -- Enable completing paths in :
 cmp.setup.cmdline(':', {
@@ -95,6 +98,7 @@ local on_attach = function(client, bufnr)
 
   --Enable completion triggered by <c-x><c-o>
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+  vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
 
   -- Mappings.
   local opts = { noremap=true, silent=true }

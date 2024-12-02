@@ -22,10 +22,10 @@ line-size = 2
 padding = 1
 module-margin = 1
 
-font-0 = "Noto Sans Mono:size=10;1"
-font-1 = "Noto Sans Mono:size=10;1"
-font-2 = "Noto Sans Symbols:size=10;1"
-font-3 = "Noto Sans Symbols2:size=10;1"
+font-0 = "Noto Sans Mono:size=12;1"
+font-1 = "Noto Sans Mono:size=12;1"
+font-2 = "Noto Sans Symbols:size=12;1"
+font-3 = "Noto Sans Symbols2:size=12;1"
 
 modules-left = date wireless-network memory
 modules-center = i3
@@ -37,8 +37,8 @@ tray-maxsize = 24
 
 wm-restack = i3
 
-scroll-down = i3wm-wsnext
-scroll-up = i3wm-wsprev
+scroll-down = i3wm-wsprev
+scroll-up = i3wm-wsnext
 
 [global/wm]
 margin-top = 0

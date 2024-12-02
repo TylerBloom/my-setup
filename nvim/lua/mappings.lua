@@ -4,6 +4,7 @@ vim.api.nvim_set_keymap('', '<leader>P', '"+P' , { noremap = true })
 vim.api.nvim_set_keymap('', '<leader>y', '"+yy', { noremap = true })
 vim.api.nvim_set_keymap('', '<leader>d', '"+dd', { noremap = true })
 vim.api.nvim_set_keymap('v', '<leader>y', '"+y' , { })
+vim.api.nvim_set_keymap('n', '<leader>yw', '"+yw' , { })
 vim.api.nvim_set_keymap('v', '<leader>d', '"+d' , { })
 
 -- In other versions of nvim, cw doesn't consume whitespace. I prefer that behavior

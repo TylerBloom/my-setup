@@ -1,0 +1,87 @@
+[[colors.indexed_colors]]
+color = "0xff8700"
+index = 16
+
+[[colors.indexed_colors]]
+color = "0xd65d0e"
+index = 17
+
+[[colors.indexed_colors]]
+color = "0x3a3a3a"
+index = 18
+
+[[colors.indexed_colors]]
+color = "0x4e4e4e"
+index = 19
+
+[[colors.indexed_colors]]
+color = "0x949494"
+index = 20
+
+[[colors.indexed_colors]]
+color = "0xd5c4a1"
+index = 21
+
+[colors.bright]
+black = "0x8a8a8a"
+blue = "0x83adad"
+cyan = "0x85ad85"
+green = "0xafaf00"
+magenta = "0xd485ad"
+red = "0xd75f5f"
+white = "0xebdbb2"
+yellow = "0xffaf00"
+
+[colors.cursor]
+cursor = "0xdab997"
+text = "0x262626"
+
+[colors.normal]
+black = "0x262626"
+blue = "0x83adad"
+cyan = "0x85ad85"
+green = "0xafaf00"
+magenta = "0xd485ad"
+red = "0xd75f5f"
+white = "0xdab997"
+yellow = "0xffaf00"
+
+[colors.primary]
+background = "0x262626"
+foreground = "0xdab997"
+
+[cursor]
+unfocused_hollow = true
+
+[cursor.style]
+shape = "Beam"
+
+[font]
+size = 12.0
+
+[font.normal]
+family = "Noto Sans Mono"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Alt"
+
+[scrolling]
+history = 100000
+
+[shell]
+args = ["--login"]
+program = "/usr/bin/fish"
+
+[window]
+decorations = "full"
+dynamic_padding = true
+opacity = 0.7
+startup_mode = "Maximized"
+title = "Alacritty"

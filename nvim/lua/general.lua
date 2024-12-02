@@ -239,6 +239,8 @@ vim.cmd([[call Base16hi("DiagnosticHint", "", "", g:base16_cterm0B, "", "" )]])
 vim.cmd([[call Base16hi("DiagnosticVirtualTextError", "", "", g:base16_cterm08, "", "" )]])
 vim.cmd([[call Base16hi("DiagnosticVirtualTextWarning", "", "", g:base16_cterm0A, "", "" )]])
 vim.cmd([[call Base16hi("DiagnosticVirtualTextHint", "", "", g:base16_cterm0A, "", "" )]])
+vim.cmd([[hi LspInlayHint guifg=#b8bb26 guibg=#3c3836]])
+
 
 -- Set @lsp.mod.documentation to guifg=#8ec07c (base0C)
 
