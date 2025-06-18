@@ -174,7 +174,6 @@ keybinds clear-defaults=true {
         bind "Ctrl Shift o" { MoveTab "right"; }
     }
     shared_except "locked" {
-        bind "Ctrl g" { SwitchToMode "locked"; }
         bind "Ctrl q" { Quit; }
     }
     shared_except "locked" "move" {
