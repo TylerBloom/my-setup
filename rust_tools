@@ -1,0 +1,42 @@
+# List of Rust tools that I use
+apollo-federation-cli
+bat
+btm
+cargo -> rustup
+cargo-clippy -> rustup
+cargo-flamegraph
+cargo-fmt -> rustup
+cargo-insta
+cargo-miri -> rustup
+cargo-nextest
+cargo-shuttle
+cargo-watch
+clippy-driver -> rustup
+cross
+cross-util
+delta
+dhat-to-flamegraph
+dust
+eza
+fd
+flamegraph
+flamelens
+hyperfine
+loc
+mdbook
+rg
+rls -> rustup
+rtf
+rust-analyzer -> rustup
+rust-gdb -> rustup
+rust-gdbgui -> rustup
+rust-lldb -> rustup
+rustc -> rustup
+rustdoc -> rustup
+rustfmt -> rustup
+rustup
+shuttle
+timr-tui
+trunk
+xq
+zellij
