@@ -1,0 +1,49 @@
+layout stacked=true {
+  pane size=1 borderless=true {
+    plugin location="https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm" {
+      color_base00 "#1d2021"
+      color_base01 "#3c3836"
+      color_base02 "#504945"
+      color_base03 "#665c54"
+      color_base04 "#bdae93"
+      color_base05 "#d5c4a1"
+      color_base06 "#ebdbb2"
+      color_base07 "#fbf1c7"
+      color_base08 "#fb4934"
+      color_base09 "#fe8019"
+      color_base0A "#fabd2f"
+      color_base0B "#b8bb26"
+      color_base0C "#8ec07c"
+      color_base0D "#83a598"
+      color_base0E "#d3869b"
+      color_base0F "#d65d0e"
+
+      format_left   "{mode} Zellij #[fg=#d65d0e,bold]({session})#[bg=#3c3836]       #[fg=#fabd2f,bg=#3c3836] | {tabs}#[fg=#fabd2f,bg=#3c3836] |"
+      format_center ""
+      format_right  "{datetime}"
+      format_space  "#[bg=#3c3836]"
+
+      border_enabled  "false"
+      border_char     "─"
+      border_format   "#[fg=$base0A]{char}"
+      border_position "top"
+
+      hide_frame_for_single_pane "false"
+
+      mode_normal  "#[bg=#d3869b,fg=#000000] "
+      mode_tmux    "#[bg=#d3869b,fg=#000000] "
+
+      tab_normal    "#[fg=#ebdbb2,bg=#3c3836] {name} "
+      tab_active    "#[fg=#ebdbb2,bg=#665c54,italic] {name} "
+      tab_separator "#[fg=#fabd2f,bg=#3c3836] | "
+
+      datetime        "#[fg=#8ec07c,bold] {format} "
+      datetime_format "%A, %d %b %Y %H:%M"
+      datetime_timezone "America/New_York"
+    }
+  }
+  pane
+  pane size=1 borderless=true {
+    plugin location="status-bar"
+  }
+}
