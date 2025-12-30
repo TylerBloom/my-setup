@@ -55,7 +55,7 @@ return {
   { 'jparise/vim-graphql' },
   { 'neovim/nvim-lspconfig' },
   { 'simrat39/inlay-hints.nvim' },
-  { 'mrcjkb/rustaceanvim', version = "^4", ft = { "rust" } },
+  { 'mrcjkb/rustaceanvim', version = "^4", ft = { "rust" }, lazy = false },
   { 'nvim-lua/completion-nvim' },
   { 'hrsh7th/cmp-nvim-lsp', branch = 'main' },
   { 'hrsh7th/cmp-buffer', branch = 'main' },
@@ -76,6 +76,11 @@ return {
   { 'rhysd/vim-clang-format', lazy = true },
   { 'dag/vim-fish', lazy = true },
   { 'godlygeek/tabular', lazy = true },
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    opts = {},
+  },
   {
     "pmizio/typescript-tools.nvim",
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },

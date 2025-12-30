@@ -215,20 +215,21 @@ vim.api.nvim_set_keymap('n', '<leader>&', '<cmd>Telescope lsp_references initial
 -- Error mappings
 vim.api.nvim_set_keymap('n', '<leader>eh', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>el', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>ee', '<cmd>lua vim.diagnostic.open_float(0, {scope="cursor"})<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>E', '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>e', '<cmd>Telescope diagnostics severity_limit=1 initial_mode=normal<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>ee', '<cmd>Telescope diagnostics severity_limit=2 initial_mode=normal<CR>', { noremap = true, silent = true })
 
 -- Misc mappings
 vim.api.nvim_set_keymap('n', '<leader>R', '<cmd>lua vim.lsp.buf.rename()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.format( { async = true } )<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>i', '<cmd>lua vim.lsp.buf.hover()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>C', "<cmd>RustLsp openCargo<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>c', '<cmd>cd ..<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>c', '<cmd>cd ..<CR>', { noremap = true, silent = true })
 
 -- Comment out the selection
-vim.api.nvim_set_keymap('v', '<leader>>', ":s/\\(.*\\)/\\/\\/ \\1/<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('v', '<leader><', '<cmd>cd ..<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('v', '<leader>,', ':s/\\(.*\\)/\\/\\/ \\1/<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('v', '<leader>.', ':s/\\(\\s*\\)\\(.*\\)/\\1\\/\\/\\2/<CR>:nohlsearch<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<leader>c', ':s/\\(\\s*\\)\\(.*\\)/\\1\\/\\/\\2/<CR>:nohlsearch<CR>', { noremap = true, silent = true })
 
 
 -- LSP configuration & Config for toggleterm

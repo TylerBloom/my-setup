@@ -2,7 +2,6 @@ local cmp = require('cmp')
 local lspconfig = require('lspconfig')
 local toggleterm = require('toggleterm')
 
-
 local servers = { "rust_analyzer" }
 cmp.setup({
   snippet = {
@@ -54,10 +53,7 @@ vim.g.rustaceanvim = {
 				},
       	cargo = {
       	    allFeatures = true,
-      	    targetDir = true,
-      	    extraEnv = {
-      	    		['CARGO_TARGET_DIR'] = "/home/parallels/.cargo/ra_target"
-						}
+      	    -- targetDir = true,
 				},
       },
     },
@@ -180,9 +176,9 @@ require"fidget".setup{
         function(msg) return msg.title end,
       format_group_name =         -- How to format a progress notification group's name
         function(group) return tostring(group) end,
-      overrides = {               -- Override options from the default notification config
-        rust_analyzer = { name = "rust-analyzer" },
-      },
+      -- overrides = {               -- Override options from the default notification config
+        -- rust_analyzer = { name = "rust-analyzer" },
+      -- },
     },
 
     -- Options related to Neovim's built-in LSP client

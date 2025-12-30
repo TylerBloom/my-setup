@@ -6,7 +6,7 @@ vim.o.number = true
 vim.o.relativenumber = true
 vim.o.title = true
 
-vim.o.shell = "/usr/bin/fish"
+vim.o.shell = "/opt/homebrew/bin/fish"
 -- Sets how many lines of history VIM has to remember
 vim.o.history = 100
 
@@ -132,7 +132,7 @@ vim.o.stal = 2
 ---   Turn persistent undo on means that you can undo even  ---
 ---   when you close a buffer/VIM                           ---
 ---------------------------------------------------------------
-vim.o.undodir = "/home/tylerbloom/.config/nvim/temp_dirs/undodir"
+vim.o.undodir = "/Users/tylerbloom/.config/nvim/temp_dirs/undodir"
 vim.o.undofile = true
 
 
