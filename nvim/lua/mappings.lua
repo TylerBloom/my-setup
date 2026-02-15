@@ -207,7 +207,9 @@ vim.api.nvim_set_keymap('n', '<leader>fb', '<cmd>Telescope buffers initial_mode=
 
 -- Goto mappings
 vim.api.nvim_set_keymap('n', '<leader>g', '<Cmd>lua vim.lsp.buf.declaration()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>gs', '<Cmd>vsplit<CR><Cmd>lua vim.lsp.buf.declaration()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>G', '<Cmd>lua vim.lsp.buf.definition()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>Gs', '<Cmd>vsplit<CR><Cmd>lua vim.lsp.buf.definition()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>r', '<cmd>Telescope lsp_references initial_mode=normal<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>&', '<cmd>Telescope lsp_references initial_mode=normal<CR>', { noremap = true, silent = true })
 -- nnoremap <silent> <leader>i <cmd>Telescope lsp_implementations initial_mode=normal<CR>
