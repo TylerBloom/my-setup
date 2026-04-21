@@ -45,7 +45,7 @@ vim.g.rustaceanvim = {
 								typeHints = { enable = false },
 								parameterHints = { enable = false },
 								bindingModeHints = { enable = false },
-								closingBraceHints = { enable = false },
+								closingBraceHints = { enable = true },
 								closureCaptureHints = { enable = false },
 				},
       	check = {

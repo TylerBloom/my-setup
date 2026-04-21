@@ -120,12 +120,8 @@ vim.api.nvim_set_keymap('n', '<leader>O', 'zo', { noremap = true, silent = true 
 -- Visual Mode mappings
 -- Normally, pasting something while in visual mode will replace what is in
 -- that register with what is highlighted. This stops that.
--- vim.api.nvim_set_keymap('x', 'p', "\"_d\"'.v:register.'P'", { noremap = true, expr = true })
--- vim.api.nvim_set_keymap('x', 'P', "\"_d\"'.v:register.'P'", { noremap = true, expr = true })
-
--- xnoremap <expr> p '"_d"'.v:register.'P'
--- xnoremap <expr> P '"_d"'.v:register.'P'
--- "_d"XP
+vim.keymap.set('x', 'p', function() return '"_d"' .. vim.v.register .. 'P' end, { noremap = true, expr = true, silent = true })
+vim.keymap.set('x', 'P', function() return '"_d"' .. vim.v.register .. 'P' end, { noremap = true, expr = true, silent = true })
 
 -- Insert mode mapppings
 -- Normally, adding '#' as the first char to an indented line will remove the
